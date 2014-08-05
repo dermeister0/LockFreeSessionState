@@ -5,6 +5,8 @@ VisualStudioVersion = 12.0.21005.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Heavysoft.LockFreeSessionStateModule", "Heavysoft.LockFreeSessionStateModule\Heavysoft.LockFreeSessionStateModule.csproj", "{39856AAE-56CA-4955-A756-2E7638B5D0AB}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LockFreeSample", "LockFreeSample\LockFreeSample.csproj", "{93424565-4203-45F4-AE4C-2146DED76114}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{39856AAE-56CA-4955-A756-2E7638B5D0AB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{39856AAE-56CA-4955-A756-2E7638B5D0AB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{39856AAE-56CA-4955-A756-2E7638B5D0AB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{93424565-4203-45F4-AE4C-2146DED76114}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{93424565-4203-45F4-AE4C-2146DED76114}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{93424565-4203-45F4-AE4C-2146DED76114}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{93424565-4203-45F4-AE4C-2146DED76114}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
