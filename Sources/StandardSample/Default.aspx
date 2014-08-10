@@ -4,7 +4,12 @@
     void Page_Load()
     {
         // Create a cookie.
-        Session["Test"] = "value";
+        Session["Test"] = "Default.aspx";
+        
+        if (Session["Test"] != null)
+            lblLine1.Text = Session["Test"].ToString();
+        else
+            lblLine1.Text = "null";
     }
 </script>
 
@@ -15,6 +20,8 @@
     <title>Standard sample</title>
 </head>
 <body>
+    <div>Session[&quot;Test&quot;] = <asp:Label ID="lblLine1" runat="server" /></div>
+
     <div>SLOW</div>
     <iframe width="400" height="100" src="Slow.aspx"></iframe>
 
