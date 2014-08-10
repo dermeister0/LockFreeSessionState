@@ -10,6 +10,7 @@ using System.Web.SessionState;
 
 namespace Heavysoft.Web.SessionState
 {
+    [Serializable]
     internal class ThreadSafeSessionStateItemCollection : ISessionStateItemCollection
     {
         /// <summary>

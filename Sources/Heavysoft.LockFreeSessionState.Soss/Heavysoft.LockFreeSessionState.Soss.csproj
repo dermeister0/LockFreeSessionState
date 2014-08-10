@@ -21,6 +21,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <PlatformTarget>x86</PlatformTarget>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -40,6 +41,10 @@
     <Reference Include="soss_namedcache, Version=5.0.0.0, Culture=neutral, PublicKeyToken=a1ec0b86f746a476, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\Program Files\ScaleOut_Software\StateServer\DOTNET4.0\soss_namedcache.dll</HintPath>
+    </Reference>
+    <Reference Include="soss_svcdotnet, Version=5.0.0.0, Culture=neutral, PublicKeyToken=a1ec0b86f746a476, processorArchitecture=AMD64">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\Program Files\ScaleOut_Software\StateServer\DOTNET4.0\soss_svcdotnet.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Web" />

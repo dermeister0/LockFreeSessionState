@@ -11,6 +11,7 @@ namespace Heavysoft.Web.SessionState
     /// <summary>
     /// The SessionItem class is used to store data for a particular session.
     /// </summary>
+    [Serializable]
     public class SessionItem
     {
         public ISessionStateItemCollection Items;
