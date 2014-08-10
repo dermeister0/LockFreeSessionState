@@ -8,7 +8,7 @@
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Heavysoft.Web.SessionState</RootNamespace>
-    <AssemblyName>Heavysoft.LockFreeSessionState</AssemblyName>
+    <AssemblyName>Heavysoft.LockFreeSessionState.Common</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
