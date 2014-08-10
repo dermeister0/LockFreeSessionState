@@ -1,8 +1,7 @@
 Lock-free session state module for ASP.NET
 ==========================================
 
-Description:
-http://stackoverflow.com/questions/3629709/i-just-discovered-why-all-asp-net-websites-are-slow-and-i-am-trying-to-work-out/3660837#3660837
+Discussion: http://stackoverflow.com/a/25231036/991267
 
 Usage
 -----
