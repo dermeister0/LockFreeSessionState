@@ -27,7 +27,7 @@ namespace Heavysoft.Web.SessionState
         private Timer timer;
         private int timerSeconds = 10;
         private Hashtable sessionItems = new Hashtable();
-        private ReaderWriterLock hashtableLock = new ReaderWriterLock();
+        private ReaderWriterLockSlim hashtableLock = new ReaderWriterLockSlim();
 
         protected override void OnInit()
         {
@@ -64,12 +64,12 @@ namespace Heavysoft.Web.SessionState
 
             try
             {
-                hashtableLock.AcquireWriterLock(Int32.MaxValue);
+                hashtableLock.EnterWriteLock();
                 sessionItems[sessionId] = sessionData;
             }
             finally
             {
-                hashtableLock.ReleaseWriterLock();
+                hashtableLock.ExitWriteLock();
             }
 
             return sessionData;
@@ -81,7 +81,7 @@ namespace Heavysoft.Web.SessionState
 
             try
             {
-                hashtableLock.AcquireReaderLock(Int32.MaxValue);
+                hashtableLock.EnterReadLock();
                 sessionData = (SessionItemEx)sessionItems[sessionId];
 
                 if (sessionData != null)
@@ -89,7 +89,7 @@ namespace Heavysoft.Web.SessionState
             }
             finally
             {
-                hashtableLock.ReleaseReaderLock();
+                hashtableLock.ExitReadLock();
             }
 
             return sessionData;
@@ -104,14 +104,14 @@ namespace Heavysoft.Web.SessionState
         {
             try
             {
-                hashtableLock.AcquireWriterLock(Int32.MaxValue);
+                hashtableLock.EnterWriteLock();
 
                 this.RemoveExpiredSessionData();
 
             }
             finally
             {
-                hashtableLock.ReleaseWriterLock();
+                hashtableLock.ExitWriteLock();
             }
         }
 
@@ -153,12 +153,12 @@ namespace Heavysoft.Web.SessionState
         {
             try
             {
-                hashtableLock.AcquireWriterLock(Int32.MaxValue);
+                hashtableLock.EnterWriteLock();
                 sessionItems.Remove(sessionId);
             }
             finally
             {
-                hashtableLock.ReleaseWriterLock();
+                hashtableLock.ExitWriteLock();
             }
         }
     }

@@ -32,6 +32,7 @@ namespace Heavysoft.Web.SessionState
         private bool initialized = false;
         private ISessionIDManager sessionIDManager;
         private SessionStateSection config;
+        private object lockObject = new object();
 
         /// <summary>
         /// IHttpModule.Init  
@@ -50,7 +51,7 @@ namespace Heavysoft.Web.SessionState
             // If not already initialized, initialize timer and configuration. 
             if (!initialized)
             {
-                lock (typeof(LockFreeSessionStateModule))
+                lock (lockObject)
                 {
                     if (!initialized)
                     {
