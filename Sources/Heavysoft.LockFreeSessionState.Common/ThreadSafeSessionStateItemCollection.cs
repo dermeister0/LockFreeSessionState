@@ -23,6 +23,7 @@ namespace Heavysoft.Web.SessionState
         /// </summary>
         private Hashtable dataValues = new Hashtable();
 
+        [NonSerialized]
         private ReaderWriterLockSlim dataLock = new ReaderWriterLockSlim();
 
         private object enumeratorLock = new object();

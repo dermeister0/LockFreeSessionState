@@ -2,6 +2,7 @@
 using Soss.Client;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -10,6 +11,50 @@ using System.Web.SessionState;
 
 namespace Heavysoft.Web.SessionState
 {
+    [Serializable]
+    internal class SessionItemEx
+    {
+        ISessionStateItemCollection items;
+
+        byte[] staticObjects;
+
+        public SessionItemEx(SessionItem data)
+        {
+            items = data.Items;
+
+            using (var stream = new MemoryStream())
+            {
+                using (var writer = new BinaryWriter(stream))
+                {
+                    data.StaticObjects.Serialize(writer);
+                    staticObjects = stream.ToArray();
+                }
+            }
+        }
+
+        public SessionItem GetSessionItem()
+        {
+            var result = new SessionItem();
+            result.Items = items;
+
+            if (staticObjects != null)
+            {
+                using (var stream = new MemoryStream())
+                {
+                    stream.Write(staticObjects, 0, staticObjects.Length);
+                    stream.Seek(0, SeekOrigin.Begin);
+
+                    using (var reader = new BinaryReader(stream))
+                    {
+                        result.StaticObjects = HttpStaticObjectsCollection.Deserialize(reader);
+                    }
+                }
+            }
+
+            return result;
+        }
+    }
+
     public class SossSessionStateModule : LockFreeSessionStateModule
     {
         NamedCache namedCache;
@@ -32,19 +77,27 @@ namespace Heavysoft.Web.SessionState
             sessionItem.Items = items;
             sessionItem.StaticObjects = staticObjects;
 
-            namedCache.Insert(sessionId, sessionItem, createPolicy, true, false);
+            var data = new SessionItemEx(sessionItem);
+
+            namedCache.Insert(sessionId, data, createPolicy, true, false);
 
             return sessionItem;
         }
 
         protected override SessionItem GetSessionItem(string sessionId)
         {
-            throw new NotImplementedException();
+            SessionItem result = null;
+            var data = namedCache.Retrieve(sessionId, false) as SessionItemEx;
+
+            if (data != null)
+                result = data.GetSessionItem();
+
+            return result;
         }
 
         protected override void RemoveSessionItem(string sessionId)
         {
-            throw new NotImplementedException();
+            namedCache.Remove(sessionId);
         }
     }
 }
