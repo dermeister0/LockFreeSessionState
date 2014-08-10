@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LockFreeSample", "LockFreeS
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StandardSample", "StandardSample\StandardSample.csproj", "{2C5D07CD-D544-47C2-A1EB-33E5F78B103A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Heavysoft.LockFreeSessionState.HashtableProvider", "Heavysoft.LockFreeSessionState.HashtableProvider\Heavysoft.LockFreeSessionState.HashtableProvider.csproj", "{9D146256-9E7E-4F10-B6F7-299E946E30F6}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{2C5D07CD-D544-47C2-A1EB-33E5F78B103A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2C5D07CD-D544-47C2-A1EB-33E5F78B103A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2C5D07CD-D544-47C2-A1EB-33E5F78B103A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9D146256-9E7E-4F10-B6F7-299E946E30F6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9D146256-9E7E-4F10-B6F7-299E946E30F6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9D146256-9E7E-4F10-B6F7-299E946E30F6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9D146256-9E7E-4F10-B6F7-299E946E30F6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
