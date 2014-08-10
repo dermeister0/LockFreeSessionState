@@ -39,7 +39,9 @@ namespace Heavysoft.Web.SessionState
             }
         }
         
-        protected override void AddNewSessionItem(string sessionId, SessionStateItemCollection items, HttpStaticObjectsCollection staticObjects)
+        protected override SessionItem AddNewSessionItem(string sessionId,
+                                                         SessionStateItemCollection items,
+                                                         HttpStaticObjectsCollection staticObjects)
         {
             var sessionData = new SessionItem();
 
@@ -56,6 +58,8 @@ namespace Heavysoft.Web.SessionState
             {
                 hashtableLock.ReleaseWriterLock();
             }
+
+            return sessionData;
         }
 
         protected override SessionItem GetSessionItem(string sessionId)
