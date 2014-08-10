@@ -66,6 +66,8 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Default.aspx" />
+    <Content Include="Fast.aspx" />
+    <Content Include="Slow.aspx" />
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
