@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Heavysoft.LockFreeSessionState.Soss
+namespace Heavysoft.Web.SessionState
 {
     public class SossSessionStateModule : LockFreeSessionStateModule
     {

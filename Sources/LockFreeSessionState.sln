@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Heavysoft.LockFreeSessionSt
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Heavysoft.LockFreeSessionState.Soss", "Heavysoft.LockFreeSessionState.Soss\Heavysoft.LockFreeSessionState.Soss.csproj", "{C0A52E75-D805-400F-B207-7812590C7630}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SossSample", "SossSample\SossSample.csproj", "{9B3B0D84-C8EC-471E-ADFA-09FDD5D855E5}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{C0A52E75-D805-400F-B207-7812590C7630}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C0A52E75-D805-400F-B207-7812590C7630}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C0A52E75-D805-400F-B207-7812590C7630}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9B3B0D84-C8EC-471E-ADFA-09FDD5D855E5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9B3B0D84-C8EC-471E-ADFA-09FDD5D855E5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9B3B0D84-C8EC-471E-ADFA-09FDD5D855E5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9B3B0D84-C8EC-471E-ADFA-09FDD5D855E5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

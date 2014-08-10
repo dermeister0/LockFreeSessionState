@@ -7,10 +7,11 @@
     <ProjectGuid>{C0A52E75-D805-400F-B207-7812590C7630}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Heavysoft.LockFreeSessionState.Soss</RootNamespace>
+    <RootNamespace>Heavysoft.Web.SessionState</RootNamespace>
     <AssemblyName>Heavysoft.LockFreeSessionState.Soss</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -29,6 +30,12 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>true</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyOriginatorKeyFile>LockFreeSessionState0.pfx</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="soss_namedcache, Version=5.0.0.0, Culture=neutral, PublicKeyToken=a1ec0b86f746a476, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -46,6 +53,9 @@
       <Project>{39856aae-56ca-4955-a756-2e7638b5d0ab}</Project>
       <Name>Heavysoft.LockFreeSessionState.Common</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="LockFreeSessionState0.pfx" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
