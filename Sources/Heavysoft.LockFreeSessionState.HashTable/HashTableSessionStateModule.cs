@@ -9,6 +9,19 @@ using System.Web.SessionState;
 
 namespace Heavysoft.Web.SessionState
 {
+    /// <summary>
+    /// The SessionItemEx class is used to store data for a particular session along with 
+    /// an expiration date and time. SessionItem objects are added to the local Hashtable 
+    /// in the OnReleaseRequestState event handler and retrieved from the local Hashtable 
+    /// in the OnAcquireRequestState event handler. The ExpireCallback method is called 
+    /// periodically by the local Timer to check for all expired SessionItem objects in the 
+    /// local Hashtable and remove them. 
+    /// </summary>
+    internal class SessionItemEx : SessionItem
+    {
+        public DateTime Expires;
+    }
+
     public class HashTableSessionStateModule : LockFreeSessionStateModule
     {
         private Timer timer;
@@ -43,7 +56,7 @@ namespace Heavysoft.Web.SessionState
                                                          SessionStateItemCollection items,
                                                          HttpStaticObjectsCollection staticObjects)
         {
-            var sessionData = new SessionItem();
+            var sessionData = new SessionItemEx();
 
             sessionData.Items = items;
             sessionData.StaticObjects = staticObjects;
@@ -64,12 +77,12 @@ namespace Heavysoft.Web.SessionState
 
         protected override SessionItem GetSessionItem(string sessionId)
         {
-            SessionItem sessionData = null;
+            SessionItemEx sessionData = null;
 
             try
             {
                 hashtableLock.AcquireReaderLock(Int32.MaxValue);
-                sessionData = (SessionItem)sessionItems[sessionId];
+                sessionData = (SessionItemEx)sessionItems[sessionId];
 
                 if (sessionData != null)
                     sessionData.Expires = DateTime.Now.AddMinutes(timeout);
@@ -111,7 +124,7 @@ namespace Heavysoft.Web.SessionState
 
             foreach (DictionaryEntry entry in sessionItems)
             {
-                SessionItem item = (SessionItem)entry.Value;
+                SessionItemEx item = (SessionItemEx)entry.Value;
 
                 if (DateTime.Compare(item.Expires, DateTime.Now) <= 0)
                 {

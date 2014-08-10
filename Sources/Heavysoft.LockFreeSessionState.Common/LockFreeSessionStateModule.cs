@@ -9,6 +9,15 @@ using System.Configuration;
 namespace Heavysoft.Web.SessionState
 {
     /// <summary>
+    /// The SessionItem class is used to store data for a particular session.
+    /// </summary>
+    public class SessionItem
+    {
+        public SessionStateItemCollection Items;
+        public HttpStaticObjectsCollection StaticObjects;
+    }
+
+    /// <summary>
     /// 
     /// </summary>
     /// <remarks>
@@ -23,21 +32,6 @@ namespace Heavysoft.Web.SessionState
         private bool initialized = false;
         private ISessionIDManager sessionIDManager;
         private SessionStateSection config;
-
-        /// <summary>
-        /// The SessionItem class is used to store data for a particular session along with 
-        /// an expiration date and time. SessionItem objects are added to the local Hashtable 
-        /// in the OnReleaseRequestState event handler and retrieved from the local Hashtable 
-        /// in the OnAcquireRequestState event handler. The ExpireCallback method is called 
-        /// periodically by the local Timer to check for all expired SessionItem objects in the 
-        /// local Hashtable and remove them. 
-        /// </summary>
-        protected class SessionItem
-        {
-            public SessionStateItemCollection Items;
-            public HttpStaticObjectsCollection StaticObjects;
-            public DateTime Expires;
-        }
 
         /// <summary>
         /// IHttpModule.Init  
