@@ -8,18 +8,17 @@ using System.Configuration;
 
 namespace Heavysoft.Web.SessionState
 {
-    public sealed class LockFreeSessionStateModule : IHttpModule, IDisposable
+    public abstract class LockFreeSessionStateModule : IHttpModule, IDisposable
     {
-        private Hashtable sessionItems = new Hashtable();
+        protected Hashtable sessionItems = new Hashtable();
         private Timer timer;
         private int timerSeconds = 10;
         private bool initialized = false;
-        private int timeout;
+        protected int timeout;
         private HttpCookieMode cookieMode = HttpCookieMode.UseCookies;
-        private ReaderWriterLock hashtableLock = new ReaderWriterLock();
+        protected ReaderWriterLock hashtableLock = new ReaderWriterLock();
         private ISessionIDManager sessionIDManager;
         private SessionStateSection config;
-
 
         // The SessionItem class is used to store data for a particular session along with 
         // an expiration date and time. SessionItem objects are added to the local Hashtable 
@@ -28,11 +27,11 @@ namespace Heavysoft.Web.SessionState
         // periodically by the local Timer to check for all expired SessionItem objects in the 
         // local Hashtable and remove them. 
 
-        private class SessionItem
+        protected class SessionItem
         {
-            internal SessionStateItemCollection Items;
-            internal HttpStaticObjectsCollection StaticObjects;
-            internal DateTime Expires;
+            public SessionStateItemCollection Items;
+            public HttpStaticObjectsCollection StaticObjects;
+            public DateTime Expires;
         }
 
 
@@ -160,35 +159,24 @@ namespace Heavysoft.Web.SessionState
             HttpApplication app = (HttpApplication)source;
             HttpContext context = app.Context;
             bool isNew = false;
-            string sessionID;
+            string sessionId;
             SessionItem sessionData = null;
             bool supportSessionIDReissue = true;
 
             sessionIDManager.InitializeRequest(context, false, out supportSessionIDReissue);
-            sessionID = sessionIDManager.GetSessionID(context);
+            sessionId = sessionIDManager.GetSessionID(context);
 
 
-            if (sessionID != null)
+            if (sessionId != null)
             {
-                try
-                {
-                    hashtableLock.AcquireReaderLock(Int32.MaxValue);
-                    sessionData = (SessionItem)sessionItems[sessionID];
-
-                    if (sessionData != null)
-                        sessionData.Expires = DateTime.Now.AddMinutes(timeout);
-                }
-                finally
-                {
-                    hashtableLock.ReleaseReaderLock();
-                }
+                sessionData = GetSessionItem(sessionId);
             }
             else
             {
                 bool redirected, cookieAdded;
 
-                sessionID = sessionIDManager.CreateSessionID(context);
-                sessionIDManager.SaveSessionID(context, sessionID, out redirected, out cookieAdded);
+                sessionId = sessionIDManager.CreateSessionID(context);
+                sessionIDManager.SaveSessionID(context, sessionId, out redirected, out cookieAdded);
 
                 if (redirected)
                     return;
@@ -201,26 +189,12 @@ namespace Heavysoft.Web.SessionState
 
                 isNew = true;
 
-                sessionData = new SessionItem();
-
-                sessionData.Items = new SessionStateItemCollection();
-                sessionData.StaticObjects = SessionStateUtility.GetSessionStaticObjects(context);
-                sessionData.Expires = DateTime.Now.AddMinutes(timeout);
-
-                try
-                {
-                    hashtableLock.AcquireWriterLock(Int32.MaxValue);
-                    sessionItems[sessionID] = sessionData;
-                }
-                finally
-                {
-                    hashtableLock.ReleaseWriterLock();
-                }
+                AddNewSessionItem(sessionId, new SessionStateItemCollection(), SessionStateUtility.GetSessionStaticObjects(context));
             }
 
             // Add the session data to the current HttpContext.
             SessionStateUtility.AddHttpSessionStateToContext(context,
-                             new HttpSessionStateContainer(sessionID,
+                             new HttpSessionStateContainer(sessionId,
                                                           sessionData.Items,
                                                           sessionData.StaticObjects,
                                                           timeout,
@@ -235,6 +209,10 @@ namespace Heavysoft.Web.SessionState
                 Start(this, EventArgs.Empty);
             }
         }
+
+        protected abstract void AddNewSessionItem(string sessionId, SessionStateItemCollection items, HttpStaticObjectsCollection staticObjects);
+
+        protected abstract SessionItem GetSessionItem(string sessionId);
 
         // 
         // Event for Session_OnStart event in the Global.asax file. 
