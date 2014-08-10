@@ -73,6 +73,12 @@
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Heavysoft.LockFreeSessionStateModule\Heavysoft.LockFreeSessionStateModule.csproj">
+      <Project>{39856aae-56ca-4955-a756-2e7638b5d0ab}</Project>
+      <Name>Heavysoft.LockFreeSessionStateModule</Name>
+    </ProjectReference>
+  </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
