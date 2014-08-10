@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Heavysoft.LockFreeSessionSt
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LockFreeSample", "LockFreeSample\LockFreeSample.csproj", "{93424565-4203-45F4-AE4C-2146DED76114}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StandardSample", "StandardSample\StandardSample.csproj", "{2C5D07CD-D544-47C2-A1EB-33E5F78B103A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{93424565-4203-45F4-AE4C-2146DED76114}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{93424565-4203-45F4-AE4C-2146DED76114}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{93424565-4203-45F4-AE4C-2146DED76114}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2C5D07CD-D544-47C2-A1EB-33E5F78B103A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2C5D07CD-D544-47C2-A1EB-33E5F78B103A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2C5D07CD-D544-47C2-A1EB-33E5F78B103A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2C5D07CD-D544-47C2-A1EB-33E5F78B103A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
