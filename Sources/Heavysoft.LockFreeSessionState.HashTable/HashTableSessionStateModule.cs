@@ -53,7 +53,7 @@ namespace Heavysoft.Web.SessionState
         }
         
         protected override SessionItem AddNewSessionItem(string sessionId,
-                                                         SessionStateItemCollection items,
+                                                         ISessionStateItemCollection items,
                                                          HttpStaticObjectsCollection staticObjects)
         {
             var sessionData = new SessionItemEx();
