@@ -6,7 +6,7 @@ using System.Threading;
 using System.Web.Configuration;
 using System.Configuration;
 
-namespace Heavysoft.Web
+namespace Heavysoft.Web.SessionState
 {
     public sealed class LockFreeSessionStateModule : IHttpModule, IDisposable
     {

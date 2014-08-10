@@ -7,8 +7,8 @@
     <ProjectGuid>{39856AAE-56CA-4955-A756-2E7638B5D0AB}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Heavysoft.LockFreeSessionStateModule</RootNamespace>
-    <AssemblyName>Heavysoft.LockFreeSessionStateModule</AssemblyName>
+    <RootNamespace>Heavysoft.LockFreeSessionState</RootNamespace>
+    <AssemblyName>Heavysoft.LockFreeSessionState</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -29,6 +29,12 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>true</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyOriginatorKeyFile>LockFreeSessionState0.pfx</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
@@ -43,6 +49,9 @@
   <ItemGroup>
     <Compile Include="LockFreeSessionStateModule.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="LockFreeSessionState0.pfx" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

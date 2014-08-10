@@ -68,15 +68,17 @@
     <Content Include="Default.aspx" />
     <Content Include="Fast.aspx" />
     <Content Include="Slow.aspx" />
-    <Content Include="Web.config" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Heavysoft.LockFreeSessionStateModule\Heavysoft.LockFreeSessionStateModule.csproj">
+    <ProjectReference Include="..\Heavysoft.LockFreeSessionState\Heavysoft.LockFreeSessionState.csproj">
       <Project>{39856aae-56ca-4955-a756-2e7638b5d0ab}</Project>
-      <Name>Heavysoft.LockFreeSessionStateModule</Name>
+      <Name>Heavysoft.LockFreeSessionState</Name>
     </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
