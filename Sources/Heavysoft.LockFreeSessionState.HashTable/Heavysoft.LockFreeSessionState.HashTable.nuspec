@@ -21,4 +21,7 @@
 		<frameworkAssembly assemblyName="System.Web" targetFramework="net40" />
 	</frameworkAssemblies>
   </metadata>
+  <files>
+    <file src="content\web.config.transform" target="Content" />
+  </files>
 </package>
