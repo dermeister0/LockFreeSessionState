@@ -9,14 +9,11 @@ using System.Configuration;
 namespace Heavysoft.Web.SessionState
 {
     public abstract class LockFreeSessionStateModule : IHttpModule, IDisposable
-    {
-        protected Hashtable sessionItems = new Hashtable();
-        private Timer timer;
-        private int timerSeconds = 10;
-        private bool initialized = false;
+    {       
         protected int timeout;
-        private HttpCookieMode cookieMode = HttpCookieMode.UseCookies;
-        protected ReaderWriterLock hashtableLock = new ReaderWriterLock();
+        protected HttpCookieMode cookieMode = HttpCookieMode.UseCookies;
+
+        private bool initialized = false;
         private ISessionIDManager sessionIDManager;
         private SessionStateSection config;
 
@@ -56,13 +53,7 @@ namespace Heavysoft.Web.SessionState
                 {
                     if (!initialized)
                     {
-                        // Create a Timer to invoke the ExpireCallback method based on 
-                        // the pTimerSeconds value (e.g. every 10 seconds).
-
-                        timer = new Timer(new TimerCallback(this.ExpireCallback),
-                                           null,
-                                           0,
-                                           timerSeconds * 1000);
+                        OnInit();
 
                         // Get the configuration section and set timeout and CookieMode values.
                         Configuration cfg =
@@ -86,68 +77,17 @@ namespace Heavysoft.Web.SessionState
 
         public void Dispose()
         {
-            if (timer != null)
-            {
-                this.timer.Dispose();
-                ((IDisposable)timer).Dispose();
-            }
+            Dispose(true);
+            GC.SuppressFinalize(this);
         }
 
-
-        // 
-        // Called periodically by the Timer created in the Init method to check for  
-        // expired sessions and remove expired data. 
-        // 
-
-        void ExpireCallback(object state)
+        protected virtual void Dispose(bool disposing)
         {
-            try
-            {
-                hashtableLock.AcquireWriterLock(Int32.MaxValue);
-
-                this.RemoveExpiredSessionData();
-
-            }
-            finally
-            {
-                hashtableLock.ReleaseWriterLock();
-            }
         }
 
 
-        // 
-        // Recursivly remove expired session data from session collection. 
-        // 
-        private void RemoveExpiredSessionData()
-        {
-            string sessionID;
 
-            foreach (DictionaryEntry entry in sessionItems)
-            {
-                SessionItem item = (SessionItem)entry.Value;
 
-                if (DateTime.Compare(item.Expires, DateTime.Now) <= 0)
-                {
-                    sessionID = entry.Key.ToString();
-                    sessionItems.Remove(entry.Key);
-
-                    HttpSessionStateContainer stateProvider =
-                      new HttpSessionStateContainer(sessionID,
-                                                   item.Items,
-                                                   item.StaticObjects,
-                                                   timeout,
-                                                   false,
-                                                   cookieMode,
-                                                   SessionStateMode.Custom,
-                                                   false);
-
-                    SessionStateUtility.RaiseSessionEnd(stateProvider, this, EventArgs.Empty);
-                    this.RemoveExpiredSessionData();
-                    break;
-                }
-            }
-
-        }
 
 
         // 
@@ -210,10 +150,6 @@ namespace Heavysoft.Web.SessionState
             }
         }
 
-        protected abstract void AddNewSessionItem(string sessionId, SessionStateItemCollection items, HttpStaticObjectsCollection staticObjects);
-
-        protected abstract SessionItem GetSessionItem(string sessionId);
-
         // 
         // Event for Session_OnStart event in the Global.asax file. 
         // 
@@ -239,23 +175,24 @@ namespace Heavysoft.Web.SessionState
             // and execute the Session_OnEnd event from the Global.asax file. 
             if (stateProvider.IsAbandoned)
             {
-                try
-                {
-                    hashtableLock.AcquireWriterLock(Int32.MaxValue);
-
-                    sessionID = sessionIDManager.GetSessionID(context);
-                    sessionItems.Remove(sessionID);
-                }
-                finally
-                {
-                    hashtableLock.ReleaseWriterLock();
-                }
+                sessionID = sessionIDManager.GetSessionID(context);
+                RemoveSessionItem(sessionID);
 
                 SessionStateUtility.RaiseSessionEnd(stateProvider, this, EventArgs.Empty);
             }
 
             SessionStateUtility.RemoveHttpSessionStateFromContext(context);
         }
+
+        protected virtual void OnInit()
+        {
+        }
+
+        protected abstract void AddNewSessionItem(string sessionId, SessionStateItemCollection items, HttpStaticObjectsCollection staticObjects);
+
+        protected abstract SessionItem GetSessionItem(string sessionId);
+
+        protected abstract void RemoveSessionItem(string sessionId);
     }
 }
 
