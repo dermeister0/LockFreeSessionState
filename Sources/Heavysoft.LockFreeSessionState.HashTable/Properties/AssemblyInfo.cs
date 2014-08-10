@@ -5,12 +5,12 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("Heavysoft.LockFreeSessionState.HashtableProvider")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyTitle("Heavysoft.LockFreeSessionState.HashTable")]
+[assembly: AssemblyDescription("Lock-free session based on Hashtable class.")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("Heavysoft.LockFreeSessionState.HashtableProvider")]
-[assembly: AssemblyCopyright("Copyright ©  2014")]
+[assembly: AssemblyCompany("Heavysoft")]
+[assembly: AssemblyProduct("Heavysoft.LockFreeSessionState.HashTable")]
+[assembly: AssemblyCopyright("Copyright © 2014 Der_Meister")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

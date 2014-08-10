@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
+  <metadata>
+    <id>$id$</id>
+    <version>$version$</version>
+    <authors>$author$</authors>
+    <owners>$author$</owners>
+    <licenseUrl>https://raw.githubusercontent.com/dermeister0/LockFreeSessionState/master/LICENSE</licenseUrl>
+    <projectUrl>https://github.com/dermeister0/LockFreeSessionState</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>$description$</description>
+    <copyright>Copyright © 2014 Der_Meister</copyright>
+	<dependencies>
+		<group targetFramework=".NETFramework4.0">
+			<dependency id="Heavysoft.LockFreeSessionState.Common" version="1.0.0" />
+		</group>
+	</dependencies>
+	<frameworkAssemblies>
+		<frameworkAssembly assemblyName="System" targetFramework="net40" />
+		<frameworkAssembly assemblyName="System.Configuration" targetFramework="net40" />
+		<frameworkAssembly assemblyName="System.Web" targetFramework="net40" />
+	</frameworkAssemblies>
+  </metadata>
+</package>
