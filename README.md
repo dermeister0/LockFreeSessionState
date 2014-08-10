@@ -4,12 +4,12 @@ Lock-free session state module for ASP.NET
 Usage
 -----
 
-1. Install the package.
+* Install the package.
 
     ```
     Install-Package Heavysoft.LockFreeSessionState.HashTable
     ```
-2. Add lines to web.config:
+* These lines will be added to web.config:
 
     ```xml
       <system.webServer>
@@ -19,3 +19,5 @@ Usage
         </modules>
       </system.webServer>
     ```
+
+* Lock-free session module will be loaded instead of the standard ASP.NET SessionStateModule.
