@@ -5,10 +5,10 @@
     <version>$version$</version>
     <authors>$author$</authors>
     <owners>$author$</owners>
-    <licenseUrl>https://raw.githubusercontent.com/dermeister0/LockFreeSessionStateModule/master/LICENSE</licenseUrl>
-    <projectUrl>https://github.com/dermeister0/LockFreeSessionStateModule</projectUrl>
+    <licenseUrl>https://raw.githubusercontent.com/dermeister0/LockFreeSessionState/master/LICENSE</licenseUrl>
+    <projectUrl>https://github.com/dermeister0/LockFreeSessionState</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>$description$</description>
-    <copyright>Copyright © Der_Meister 2014</copyright>
+    <copyright>Copyright © 2014 Der_Meister</copyright>
   </metadata>
 </package>
