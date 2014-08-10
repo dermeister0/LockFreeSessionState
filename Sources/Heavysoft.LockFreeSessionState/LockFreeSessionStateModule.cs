@@ -10,15 +10,15 @@ namespace Heavysoft.Web.SessionState
 {
     public sealed class LockFreeSessionStateModule : IHttpModule, IDisposable
     {
-        private Hashtable pSessionItems = new Hashtable();
-        private Timer pTimer;
-        private int pTimerSeconds = 10;
-        private bool pInitialized = false;
-        private int pTimeout;
-        private HttpCookieMode pCookieMode = HttpCookieMode.UseCookies;
-        private ReaderWriterLock pHashtableLock = new ReaderWriterLock();
-        private ISessionIDManager pSessionIDManager;
-        private SessionStateSection pConfig;
+        private Hashtable sessionItems = new Hashtable();
+        private Timer timer;
+        private int timerSeconds = 10;
+        private bool initialized = false;
+        private int timeout;
+        private HttpCookieMode cookieMode = HttpCookieMode.UseCookies;
+        private ReaderWriterLock hashtableLock = new ReaderWriterLock();
+        private ISessionIDManager sessionIDManager;
+        private SessionStateSection config;
 
 
         // The SessionItem class is used to store data for a particular session along with 
@@ -47,33 +47,33 @@ namespace Heavysoft.Web.SessionState
             app.ReleaseRequestState += new EventHandler(this.OnReleaseRequestState);
 
             // Create a SessionIDManager.
-            pSessionIDManager = new SessionIDManager();
-            pSessionIDManager.Initialize();
+            sessionIDManager = new SessionIDManager();
+            sessionIDManager.Initialize();
 
             // If not already initialized, initialize timer and configuration. 
-            if (!pInitialized)
+            if (!initialized)
             {
                 lock (typeof(LockFreeSessionStateModule))
                 {
-                    if (!pInitialized)
+                    if (!initialized)
                     {
                         // Create a Timer to invoke the ExpireCallback method based on 
                         // the pTimerSeconds value (e.g. every 10 seconds).
 
-                        pTimer = new Timer(new TimerCallback(this.ExpireCallback),
+                        timer = new Timer(new TimerCallback(this.ExpireCallback),
                                            null,
                                            0,
-                                           pTimerSeconds * 1000);
+                                           timerSeconds * 1000);
 
                         // Get the configuration section and set timeout and CookieMode values.
                         Configuration cfg =
                           WebConfigurationManager.OpenWebConfiguration(System.Web.Hosting.HostingEnvironment.ApplicationVirtualPath);
-                        pConfig = (SessionStateSection)cfg.GetSection("system.web/sessionState");
+                        config = (SessionStateSection)cfg.GetSection("system.web/sessionState");
 
-                        pTimeout = (int)pConfig.Timeout.TotalMinutes;
-                        pCookieMode = pConfig.Cookieless;
+                        timeout = (int)config.Timeout.TotalMinutes;
+                        cookieMode = config.Cookieless;
 
-                        pInitialized = true;
+                        initialized = true;
                     }
                 }
             }
@@ -87,10 +87,10 @@ namespace Heavysoft.Web.SessionState
 
         public void Dispose()
         {
-            if (pTimer != null)
+            if (timer != null)
             {
-                this.pTimer.Dispose();
-                ((IDisposable)pTimer).Dispose();
+                this.timer.Dispose();
+                ((IDisposable)timer).Dispose();
             }
         }
 
@@ -104,14 +104,14 @@ namespace Heavysoft.Web.SessionState
         {
             try
             {
-                pHashtableLock.AcquireWriterLock(Int32.MaxValue);
+                hashtableLock.AcquireWriterLock(Int32.MaxValue);
 
                 this.RemoveExpiredSessionData();
 
             }
             finally
             {
-                pHashtableLock.ReleaseWriterLock();
+                hashtableLock.ReleaseWriterLock();
             }
         }
 
@@ -123,22 +123,22 @@ namespace Heavysoft.Web.SessionState
         {
             string sessionID;
 
-            foreach (DictionaryEntry entry in pSessionItems)
+            foreach (DictionaryEntry entry in sessionItems)
             {
                 SessionItem item = (SessionItem)entry.Value;
 
                 if (DateTime.Compare(item.Expires, DateTime.Now) <= 0)
                 {
                     sessionID = entry.Key.ToString();
-                    pSessionItems.Remove(entry.Key);
+                    sessionItems.Remove(entry.Key);
 
                     HttpSessionStateContainer stateProvider =
                       new HttpSessionStateContainer(sessionID,
                                                    item.Items,
                                                    item.StaticObjects,
-                                                   pTimeout,
+                                                   timeout,
                                                    false,
-                                                   pCookieMode,
+                                                   cookieMode,
                                                    SessionStateMode.Custom,
                                                    false);
 
@@ -164,31 +164,31 @@ namespace Heavysoft.Web.SessionState
             SessionItem sessionData = null;
             bool supportSessionIDReissue = true;
 
-            pSessionIDManager.InitializeRequest(context, false, out supportSessionIDReissue);
-            sessionID = pSessionIDManager.GetSessionID(context);
+            sessionIDManager.InitializeRequest(context, false, out supportSessionIDReissue);
+            sessionID = sessionIDManager.GetSessionID(context);
 
 
             if (sessionID != null)
             {
                 try
                 {
-                    pHashtableLock.AcquireReaderLock(Int32.MaxValue);
-                    sessionData = (SessionItem)pSessionItems[sessionID];
+                    hashtableLock.AcquireReaderLock(Int32.MaxValue);
+                    sessionData = (SessionItem)sessionItems[sessionID];
 
                     if (sessionData != null)
-                        sessionData.Expires = DateTime.Now.AddMinutes(pTimeout);
+                        sessionData.Expires = DateTime.Now.AddMinutes(timeout);
                 }
                 finally
                 {
-                    pHashtableLock.ReleaseReaderLock();
+                    hashtableLock.ReleaseReaderLock();
                 }
             }
             else
             {
                 bool redirected, cookieAdded;
 
-                sessionID = pSessionIDManager.CreateSessionID(context);
-                pSessionIDManager.SaveSessionID(context, sessionID, out redirected, out cookieAdded);
+                sessionID = sessionIDManager.CreateSessionID(context);
+                sessionIDManager.SaveSessionID(context, sessionID, out redirected, out cookieAdded);
 
                 if (redirected)
                     return;
@@ -205,16 +205,16 @@ namespace Heavysoft.Web.SessionState
 
                 sessionData.Items = new SessionStateItemCollection();
                 sessionData.StaticObjects = SessionStateUtility.GetSessionStaticObjects(context);
-                sessionData.Expires = DateTime.Now.AddMinutes(pTimeout);
+                sessionData.Expires = DateTime.Now.AddMinutes(timeout);
 
                 try
                 {
-                    pHashtableLock.AcquireWriterLock(Int32.MaxValue);
-                    pSessionItems[sessionID] = sessionData;
+                    hashtableLock.AcquireWriterLock(Int32.MaxValue);
+                    sessionItems[sessionID] = sessionData;
                 }
                 finally
                 {
-                    pHashtableLock.ReleaseWriterLock();
+                    hashtableLock.ReleaseWriterLock();
                 }
             }
 
@@ -223,9 +223,9 @@ namespace Heavysoft.Web.SessionState
                              new HttpSessionStateContainer(sessionID,
                                                           sessionData.Items,
                                                           sessionData.StaticObjects,
-                                                          pTimeout,
+                                                          timeout,
                                                           isNew,
-                                                          pCookieMode,
+                                                          cookieMode,
                                                           SessionStateMode.Custom,
                                                           false));
 
@@ -263,14 +263,14 @@ namespace Heavysoft.Web.SessionState
             {
                 try
                 {
-                    pHashtableLock.AcquireWriterLock(Int32.MaxValue);
+                    hashtableLock.AcquireWriterLock(Int32.MaxValue);
 
-                    sessionID = pSessionIDManager.GetSessionID(context);
-                    pSessionItems.Remove(sessionID);
+                    sessionID = sessionIDManager.GetSessionID(context);
+                    sessionItems.Remove(sessionID);
                 }
                 finally
                 {
-                    pHashtableLock.ReleaseWriterLock();
+                    hashtableLock.ReleaseWriterLock();
                 }
 
                 SessionStateUtility.RaiseSessionEnd(stateProvider, this, EventArgs.Empty);
