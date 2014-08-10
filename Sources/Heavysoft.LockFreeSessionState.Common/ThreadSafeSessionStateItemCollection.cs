@@ -135,7 +135,7 @@ namespace Heavysoft.Web.SessionState
                 try
                 {
                     dataLock.EnterReadLock();
-                    return dataKeys[name];
+                    return dataValues[name];
                 }
                 finally
                 {

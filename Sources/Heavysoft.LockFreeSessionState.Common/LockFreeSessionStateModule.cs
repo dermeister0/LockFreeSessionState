@@ -32,7 +32,7 @@ namespace Heavysoft.Web.SessionState
         private bool initialized = false;
         private ISessionIDManager sessionIDManager;
         private SessionStateSection config;
-        private object lockObject = new object();
+        private static object lockObject = new object();
 
         /// <summary>
         /// IHttpModule.Init  

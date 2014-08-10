@@ -26,8 +26,8 @@ namespace Heavysoft.Web.SessionState
     {
         private Timer timer;
         private int timerSeconds = 10;
-        private Hashtable sessionItems = new Hashtable();
-        private ReaderWriterLockSlim hashtableLock = new ReaderWriterLockSlim();
+        private static Hashtable sessionItems = new Hashtable();
+        private static ReaderWriterLockSlim hashtableLock = new ReaderWriterLockSlim();
 
         protected override void OnInit()
         {
