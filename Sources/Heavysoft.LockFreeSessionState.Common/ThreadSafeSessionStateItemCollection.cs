@@ -12,7 +12,15 @@ namespace Heavysoft.Web.SessionState
 {
     internal class ThreadSafeSessionStateItemCollection : ISessionStateItemCollection
     {
-        private OrderedDictionary data = new OrderedDictionary();
+        /// <summary>
+        /// Contains keys only. Values are not used.
+        /// </summary>
+        private NameValueCollection dataKeys = new NameValueCollection();
+
+        /// <summary>
+        /// Contains name-value pairs. Keys must be the same as in <see cref="dataKeys"/> collections.
+        /// </summary>
+        private Hashtable dataValues = new Hashtable();
 
         private ReaderWriterLockSlim dataLock = new ReaderWriterLockSlim();
 
@@ -23,7 +31,8 @@ namespace Heavysoft.Web.SessionState
             try
             {
                 dataLock.EnterReadLock();
-                data.Clear();
+                dataKeys.Clear();
+                dataValues.Clear();
             }
             finally
             {
@@ -45,9 +54,20 @@ namespace Heavysoft.Web.SessionState
             }
         }
 
-        public System.Collections.Specialized.NameObjectCollectionBase.KeysCollection Keys
+        public NameObjectCollectionBase.KeysCollection Keys
         {
-            get { throw new NotImplementedException(); }
+            get
+            {
+                try
+                {
+                    dataLock.EnterReadLock();
+                    return dataKeys.Keys;
+                }
+                finally
+                {
+                    dataLock.ExitReadLock();
+                }
+            }
         }
 
         public void Remove(string name)
@@ -55,7 +75,8 @@ namespace Heavysoft.Web.SessionState
             try
             {
                 dataLock.EnterWriteLock();
-                data.Remove(name);
+                dataKeys.Remove(name);
+                dataValues.Remove(name);
             }
             finally
             {
@@ -68,7 +89,10 @@ namespace Heavysoft.Web.SessionState
             try
             {
                 dataLock.EnterWriteLock();
-                data.RemoveAt(index);
+
+                string name = dataKeys.GetKey(index);
+                dataKeys.Remove(name);
+                dataValues.Remove(name);
             }
             finally
             {
@@ -83,7 +107,7 @@ namespace Heavysoft.Web.SessionState
                 try
                 {
                     dataLock.EnterReadLock();
-                    return data[index];
+                    return dataValues[dataKeys.GetKey(index)];
                 }
                 finally
                 {
@@ -95,7 +119,7 @@ namespace Heavysoft.Web.SessionState
                 try
                 {
                     dataLock.EnterWriteLock();
-                    data[index] = value;
+                    dataValues[dataKeys.GetKey(index)] = value;
                 }
                 finally
                 {
@@ -111,7 +135,7 @@ namespace Heavysoft.Web.SessionState
                 try
                 {
                     dataLock.EnterReadLock();
-                    return data[name];
+                    return dataKeys[name];
                 }
                 finally
                 {
@@ -123,7 +147,8 @@ namespace Heavysoft.Web.SessionState
                 try
                 {
                     dataLock.EnterWriteLock();
-                    data[name] = value;
+                    dataKeys.Set(name, null);
+                    dataValues[name] = value;
                 }
                 finally
                 {
@@ -137,7 +162,7 @@ namespace Heavysoft.Web.SessionState
             try
             {
                 dataLock.EnterReadLock();
-                data.CopyTo(array, index);
+                dataValues.CopyTo(array, index);
             }
             finally
             {
@@ -152,7 +177,7 @@ namespace Heavysoft.Web.SessionState
                 try
                 {
                     dataLock.EnterReadLock();
-                    return data.Count;
+                    return dataKeys.Count;
                 }
                 finally
                 {
@@ -176,7 +201,7 @@ namespace Heavysoft.Web.SessionState
             try
             {
                 dataLock.EnterReadLock();
-                return new SafeEnumerator(data.GetEnumerator(), enumeratorLock);
+                return new SafeEnumerator(dataValues.GetEnumerator(), enumeratorLock);
             }
             finally
             {
