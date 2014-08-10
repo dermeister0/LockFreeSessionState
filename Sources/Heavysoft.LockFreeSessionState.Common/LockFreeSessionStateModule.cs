@@ -8,6 +8,13 @@ using System.Configuration;
 
 namespace Heavysoft.Web.SessionState
 {
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <remarks>
+    /// Based on example from MSDN:
+    /// http://msdn.microsoft.com/en-us/library/system.web.sessionstate.sessionstateutility.aspx
+    /// </remarks>
     public abstract class LockFreeSessionStateModule : IHttpModule, IDisposable
     {       
         protected int timeout;
@@ -17,13 +24,14 @@ namespace Heavysoft.Web.SessionState
         private ISessionIDManager sessionIDManager;
         private SessionStateSection config;
 
-        // The SessionItem class is used to store data for a particular session along with 
-        // an expiration date and time. SessionItem objects are added to the local Hashtable 
-        // in the OnReleaseRequestState event handler and retrieved from the local Hashtable 
-        // in the OnAcquireRequestState event handler. The ExpireCallback method is called 
-        // periodically by the local Timer to check for all expired SessionItem objects in the 
-        // local Hashtable and remove them. 
-
+        /// <summary>
+        /// The SessionItem class is used to store data for a particular session along with 
+        /// an expiration date and time. SessionItem objects are added to the local Hashtable 
+        /// in the OnReleaseRequestState event handler and retrieved from the local Hashtable 
+        /// in the OnAcquireRequestState event handler. The ExpireCallback method is called 
+        /// periodically by the local Timer to check for all expired SessionItem objects in the 
+        /// local Hashtable and remove them. 
+        /// </summary>
         protected class SessionItem
         {
             public SessionStateItemCollection Items;
@@ -31,11 +39,10 @@ namespace Heavysoft.Web.SessionState
             public DateTime Expires;
         }
 
-
-        // 
-        // IHttpModule.Init 
-        // 
-
+        /// <summary>
+        /// IHttpModule.Init  
+        /// </summary>
+        /// <param name="app"></param>
         public void Init(HttpApplication app)
         {
             // Add event handlers.
@@ -69,13 +76,10 @@ namespace Heavysoft.Web.SessionState
             }
         }
 
-
-
-        // 
-        // IHttpModule.Dispose 
-        // 
-
-        public void Dispose()
+        /// <summary>
+        /// IHttpModule.Dispose 
+        /// </summary>
+         public void Dispose()
         {
             Dispose(true);
             GC.SuppressFinalize(this);
@@ -85,15 +89,11 @@ namespace Heavysoft.Web.SessionState
         {
         }
 
-
-
-
-
-
-        // 
-        // Event handler for HttpApplication.AcquireRequestState 
-        // 
-
+        /// <summary>
+        /// Event handler for HttpApplication.AcquireRequestState 
+        /// </summary>
+        /// <param name="source"></param>
+        /// <param name="args"></param>
         private void OnAcquireRequestState(object source, EventArgs args)
         {
             HttpApplication app = (HttpApplication)source;
@@ -152,17 +152,16 @@ namespace Heavysoft.Web.SessionState
             }
         }
 
-        // 
-        // Event for Session_OnStart event in the Global.asax file. 
-        // 
-
+        /// <summary>
+        /// Event for Session_OnStart event in the Global.asax file. 
+        /// </summary>
         public event EventHandler Start;
 
-
-        // 
-        // Event handler for HttpApplication.ReleaseRequestState 
-        // 
-
+        /// <summary>
+        /// Event handler for HttpApplication.ReleaseRequestState 
+        /// </summary>
+        /// <param name="source"></param>
+        /// <param name="args"></param>
         private void OnReleaseRequestState(object source, EventArgs args)
         {
             HttpApplication app = (HttpApplication)source;
@@ -199,4 +198,3 @@ namespace Heavysoft.Web.SessionState
         protected abstract void RemoveSessionItem(string sessionId);
     }
 }
-

@@ -82,11 +82,11 @@ namespace Heavysoft.Web.SessionState
             return sessionData;
         }
 
-        // 
-        // Called periodically by the Timer created in the Init method to check for  
-        // expired sessions and remove expired data. 
-        // 
-
+        /// <summary>
+        /// Called periodically by the Timer created in the Init method to check for  
+        /// expired sessions and remove expired data. 
+        /// </summary>
+        /// <param name="state"></param>
         void ExpireCallback(object state)
         {
             try
@@ -102,9 +102,9 @@ namespace Heavysoft.Web.SessionState
             }
         }
 
-        // 
-        // Recursivly remove expired session data from session collection. 
-        // 
+        /// <summary>
+        /// Recursivly remove expired session data from session collection. 
+        /// </summary>
         private void RemoveExpiredSessionData()
         {
             string sessionID;
