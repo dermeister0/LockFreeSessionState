@@ -1,6 +1,12 @@
 Lock-free session state module for ASP.NET
 ==========================================
 
+This module is a work-around for ASP.NET session lock. It allows to execute slow requests in parallel. Each request can use a session state in read/write mode.
+
+It may be not safe, but can help you enhance site performance if other solutions are not available.
+
+BTW, the best solution is to use read-only session state on all pages except the authentication.
+
 Discussion: http://stackoverflow.com/a/25231036/991267
 
 Usage
