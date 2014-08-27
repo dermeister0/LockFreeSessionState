@@ -60,7 +60,7 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\Program Files\ScaleOut_Software\StateServer\DOTNET4.0\soss_namedcache.dll</HintPath>
     </Reference>
-    <Reference Include="soss_svcdotnet, Version=5.0.0.0, Culture=neutral, PublicKeyToken=a1ec0b86f746a476, processorArchitecture=AMD64">
+    <Reference Include="soss_svcdotnet, Version=5.0.0.0, Culture=neutral, PublicKeyToken=a1ec0b86f746a476">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\Program Files\ScaleOut_Software\StateServer\DOTNET4.0\soss_svcdotnet.dll</HintPath>
     </Reference>
