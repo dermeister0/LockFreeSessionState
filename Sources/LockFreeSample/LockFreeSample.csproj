@@ -59,6 +59,9 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\Heavysoft.LockFreeSessionState.Common\Properties\HeavysoftVersion.cs">
+      <Link>Properties\HeavysoftVersion.cs</Link>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

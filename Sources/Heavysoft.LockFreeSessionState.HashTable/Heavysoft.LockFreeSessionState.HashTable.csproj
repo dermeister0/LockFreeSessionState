@@ -41,6 +41,9 @@
     <Reference Include="System.Web" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\Heavysoft.LockFreeSessionState.Common\Properties\HeavysoftVersion.cs">
+      <Link>Properties\HeavysoftVersion.cs</Link>
+    </Compile>
     <Compile Include="HashTableSessionStateModule.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
