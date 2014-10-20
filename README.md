@@ -42,6 +42,7 @@ Uses ScaleOut StateServer software.
 
 ```
 Install-Package Heavysoft.LockFreeSessionState.Soss
+Update-Package Heavysoft.LockFreeSessionState.Common
 ```
 
 https://www.nuget.org/packages/Heavysoft.LockFreeSessionState.Soss/
