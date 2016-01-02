@@ -71,6 +71,8 @@
   <ItemGroup>
     <Content Include="Default.aspx" />
     <Content Include="Fast.aspx" />
+    <Content Include="NoSession.aspx" />
+    <Content Include="ReadOnly.aspx" />
     <Content Include="SessionEditor.aspx" />
     <Content Include="Slow.aspx" />
     <Content Include="Web.config">
@@ -82,13 +84,6 @@
       <Link>Properties\HeavysoftVersion.cs</Link>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SessionEditor.aspx.cs">
-      <DependentUpon>SessionEditor.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="SessionEditor.aspx.designer.cs">
-      <DependentUpon>SessionEditor.aspx</DependentUpon>
-    </Compile>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Heavysoft.LockFreeSessionState.Soss\Heavysoft.LockFreeSessionState.Soss.csproj">
