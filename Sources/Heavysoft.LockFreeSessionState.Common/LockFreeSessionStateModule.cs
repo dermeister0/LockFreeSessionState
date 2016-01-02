@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Web;
 using System.Web.SessionState;
-using System.Collections;
-using System.Threading;
 using System.Web.Configuration;
 using System.Configuration;
 
@@ -27,13 +25,13 @@ namespace Heavysoft.Web.SessionState
     /// </remarks>
     public abstract class LockFreeSessionStateModule : IHttpModule, IDisposable
     {       
-        protected int timeout;
-        protected HttpCookieMode cookieMode = HttpCookieMode.UseCookies;
+        protected int Timeout;
+        protected HttpCookieMode CookieMode = HttpCookieMode.UseCookies;
 
-        private bool initialized = false;
-        private ISessionIDManager sessionIDManager;
+        private bool initialized;
+        private ISessionIDManager sessionIdManager;
         private SessionStateSection config;
-        private static object lockObject = new object();
+        private static readonly object LockObject = new object();
 
         /// <summary>
         /// IHttpModule.Init  
@@ -42,17 +40,17 @@ namespace Heavysoft.Web.SessionState
         public void Init(HttpApplication app)
         {
             // Add event handlers.
-            app.AcquireRequestState += new EventHandler(this.OnAcquireRequestState);
-            app.ReleaseRequestState += new EventHandler(this.OnReleaseRequestState);
+            app.AcquireRequestState += OnAcquireRequestState;
+            app.ReleaseRequestState += OnReleaseRequestState;
 
             // Create a SessionIDManager.
-            sessionIDManager = new SessionIDManager();
-            sessionIDManager.Initialize();
+            sessionIdManager = new SessionIDManager();
+            sessionIdManager.Initialize();
 
             // If not already initialized, initialize timer and configuration. 
             if (!initialized)
             {
-                lock (lockObject)
+                lock (LockObject)
                 {
                     if (!initialized)
                     {
@@ -63,8 +61,8 @@ namespace Heavysoft.Web.SessionState
                           WebConfigurationManager.OpenWebConfiguration(System.Web.Hosting.HostingEnvironment.ApplicationVirtualPath);
                         config = (SessionStateSection)cfg.GetSection("system.web/sessionState");
 
-                        timeout = (int)config.Timeout.TotalMinutes;
-                        cookieMode = config.Cookieless;
+                        Timeout = (int)config.Timeout.TotalMinutes;
+                        CookieMode = config.Cookieless;
 
                         initialized = true;
                     }
@@ -95,12 +93,11 @@ namespace Heavysoft.Web.SessionState
             HttpApplication app = (HttpApplication)source;
             HttpContext context = app.Context;
             bool isNew = false;
-            string sessionId;
             SessionItem sessionData = null;
-            bool supportSessionIDReissue = true;
+            bool supportSessionIdReissue;
 
-            sessionIDManager.InitializeRequest(context, false, out supportSessionIDReissue);
-            sessionId = sessionIDManager.GetSessionID(context);
+            sessionIdManager.InitializeRequest(context, false, out supportSessionIdReissue);
+            var sessionId = sessionIdManager.GetSessionID(context);
 
 
             if (sessionId != null)
@@ -111,8 +108,8 @@ namespace Heavysoft.Web.SessionState
             {
                 bool redirected, cookieAdded;
 
-                sessionId = sessionIDManager.CreateSessionID(context);
-                sessionIDManager.SaveSessionID(context, sessionId, out redirected, out cookieAdded);
+                sessionId = sessionIdManager.CreateSessionID(context);
+                sessionIdManager.SaveSessionID(context, sessionId, out redirected, out cookieAdded);
 
                 if (redirected)
                     return;
@@ -135,9 +132,9 @@ namespace Heavysoft.Web.SessionState
                              new HttpSessionStateContainer(sessionId,
                                                           sessionData.Items,
                                                           sessionData.StaticObjects,
-                                                          timeout,
+                                                          Timeout,
                                                           isNew,
-                                                          cookieMode,
+                                                          CookieMode,
                                                           SessionStateMode.Custom,
                                                           false));
 
@@ -162,7 +159,7 @@ namespace Heavysoft.Web.SessionState
         {
             HttpApplication app = (HttpApplication)source;
             HttpContext context = app.Context;
-            string sessionID;
+            string sessionId;
 
             // Read the session state from the context
             HttpSessionStateContainer stateProvider =
@@ -172,8 +169,8 @@ namespace Heavysoft.Web.SessionState
             // and execute the Session_OnEnd event from the Global.asax file. 
             if (stateProvider.IsAbandoned)
             {
-                sessionID = sessionIDManager.GetSessionID(context);
-                RemoveSessionItem(sessionID);
+                sessionId = sessionIdManager.GetSessionID(context);
+                RemoveSessionItem(sessionId);
 
                 SessionStateUtility.RaiseSessionEnd(stateProvider, this, EventArgs.Empty);
             }

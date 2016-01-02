@@ -1,11 +1,6 @@
-﻿using Heavysoft.Web.SessionState;
-using Soss.Client;
+﻿using Soss.Client;
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Web;
 using System.Web.SessionState;
 
@@ -14,9 +9,9 @@ namespace Heavysoft.Web.SessionState
     [Serializable]
     internal class SessionItemEx
     {
-        ISessionStateItemCollection items;
+        readonly ISessionStateItemCollection items;
 
-        byte[] staticObjects;
+        readonly byte[] staticObjects;
 
         public SessionItemEx(SessionItem data)
         {
@@ -66,7 +61,7 @@ namespace Heavysoft.Web.SessionState
             base.OnInit();
 
             namedCache = CacheFactory.GetCache("SossSessionState");
-            createPolicy = new CreatePolicy(TimeSpan.FromMinutes(timeout));
+            createPolicy = new CreatePolicy(TimeSpan.FromMinutes(Timeout));
         }
 
         protected override SessionItem AddNewSessionItem(string sessionId,
