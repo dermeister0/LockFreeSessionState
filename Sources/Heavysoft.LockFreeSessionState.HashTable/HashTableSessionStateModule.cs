@@ -47,12 +47,11 @@ namespace Heavysoft.Web.SessionState
         }
         
         protected override SessionItem AddNewSessionItem(string sessionId,
-                                                         ISessionStateItemCollection items,
                                                          HttpStaticObjectsCollection staticObjects)
         {
             var sessionData = new SessionItemEx();
 
-            sessionData.Items = items;
+            sessionData.Items = new ThreadSafeSessionStateItemCollection();
             sessionData.StaticObjects = staticObjects;
             sessionData.Expires = DateTime.Now.AddMinutes(Timeout);
 

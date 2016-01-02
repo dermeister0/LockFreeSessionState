@@ -123,7 +123,6 @@ namespace Heavysoft.Web.SessionState
                 isNew = true;
 
                 sessionData = AddNewSessionItem(sessionId,
-                                                new ThreadSafeSessionStateItemCollection(),
                                                 SessionStateUtility.GetSessionStaticObjects(context));
             }
 
@@ -187,7 +186,6 @@ namespace Heavysoft.Web.SessionState
         }
 
         protected abstract SessionItem AddNewSessionItem(string sessionId,
-                                                         ISessionStateItemCollection items,
                                                          HttpStaticObjectsCollection staticObjects);
 
         protected abstract SessionItem GetSessionItem(string sessionId);
