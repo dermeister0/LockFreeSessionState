@@ -1,5 +1,4 @@
 ﻿using System.Reflection;
-using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
 // General Information about an assembly is controlled through the following 
@@ -10,7 +9,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Heavysoft")]
 [assembly: AssemblyProduct("Heavysoft.LockFreeSessionState")]
-[assembly: AssemblyCopyright("Copyright © Der_Meister 2014")]
+[assembly: AssemblyCopyright("Copyright © 2014-2016 Der_Meister")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

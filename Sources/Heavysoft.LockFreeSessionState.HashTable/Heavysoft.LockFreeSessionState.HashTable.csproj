@@ -34,7 +34,7 @@
     <SignAssembly>true</SignAssembly>
   </PropertyGroup>
   <PropertyGroup>
-    <AssemblyOriginatorKeyFile>LockFreeSessionState0.pfx</AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile>..\Heavysoft.LockFreeSessionState.Common\LockFreeSessionState0.pfx</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -54,7 +54,9 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="LockFreeSessionState0.pfx" />
+    <None Include="..\Heavysoft.LockFreeSessionState.Common\LockFreeSessionState0.pfx">
+      <Link>LockFreeSessionState0.pfx</Link>
+    </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

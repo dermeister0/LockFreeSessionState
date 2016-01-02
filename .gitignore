@@ -174,3 +174,6 @@ UpgradeLog*.htm
 FakesAssemblies/
 *.nupkg
 HeavysoftVersion.cs
+Sources/.vs/
+*.exe
+*.bak

@@ -1,27 +1,27 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System;
+using System.Collections;
 using System.Threading;
 
-namespace Heavysoft.Collections
+namespace Heavysoft.Web.SessionState.Collections
 {
     /// <summary>
     /// 
     /// </summary>
     /// <remarks>http://www.codeproject.com/Articles/56575/Thread-safe-enumeration-in-C</remarks>
-    public class SafeEnumerator : IEnumerator
+    public sealed class SafeEnumerator : IEnumerator, IDisposable
     {
         // this is the (thread-unsafe)
         // enumerator of the underlying collection
-        private readonly IEnumerator m_Inner;
+        private readonly IEnumerator inner;
         // this is the object we shall lock on. 
-        private readonly object m_Lock;
+        private readonly object lockObject;
 
-        public SafeEnumerator(IEnumerator inner, object @lock)
+        public SafeEnumerator(IEnumerator inner, object lockObject)
         {
-            m_Inner = inner;
-            m_Lock = @lock;
+            this.inner = inner;
+            this.lockObject = lockObject;
             // entering lock in constructor
-            Monitor.Enter(m_Lock);
+            Monitor.Enter(lockObject);
         }
 
         #region Implementation of IDisposable
@@ -30,7 +30,7 @@ namespace Heavysoft.Collections
         {
             // .. and exiting lock on Dispose()
             // This will be called when foreach loop finishes
-            Monitor.Exit(m_Lock);
+            Monitor.Exit(lockObject);
         }
 
         #endregion
@@ -43,22 +43,17 @@ namespace Heavysoft.Collections
 
         public bool MoveNext()
         {
-            return m_Inner.MoveNext();
+            return inner.MoveNext();
         }
 
         public void Reset()
         {
-            m_Inner.Reset();
+            inner.Reset();
         }
 
         public object Current
         {
-            get { return m_Inner.Current; }
-        }
-
-        object IEnumerator.Current
-        {
-            get { return Current; }
+            get { return inner.Current; }
         }
 
         #endregion

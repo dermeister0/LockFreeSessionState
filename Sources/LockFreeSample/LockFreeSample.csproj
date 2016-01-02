@@ -19,6 +19,7 @@
     <IISExpressAnonymousAuthentication />
     <IISExpressWindowsAuthentication />
     <IISExpressUseClassicPipelineMode />
+    <UseGlobalApplicationHostFile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -53,6 +54,9 @@
   <ItemGroup>
     <Content Include="Default.aspx" />
     <Content Include="Fast.aspx" />
+    <Content Include="NoSession.aspx" />
+    <Content Include="ReadOnly.aspx" />
+    <Content Include="SessionEditor.aspx" />
     <Content Include="Slow.aspx" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>

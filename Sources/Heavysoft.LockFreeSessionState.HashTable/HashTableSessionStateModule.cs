@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Web;
 using System.Web.SessionState;
@@ -26,8 +23,8 @@ namespace Heavysoft.Web.SessionState
     {
         private Timer timer;
         private int timerSeconds = 10;
-        private static Hashtable sessionItems = new Hashtable();
-        private static ReaderWriterLockSlim hashtableLock = new ReaderWriterLockSlim();
+        private static readonly Hashtable SessionItems = new Hashtable();
+        private static readonly ReaderWriterLockSlim HashtableLock = new ReaderWriterLockSlim();
 
         protected override void OnInit()
         {
@@ -36,10 +33,7 @@ namespace Heavysoft.Web.SessionState
             // Create a Timer to invoke the ExpireCallback method based on 
             // the pTimerSeconds value (e.g. every 10 seconds).
 
-            timer = new Timer(new TimerCallback(this.ExpireCallback),
-                               null,
-                               0,
-                               timerSeconds * 1000);
+            timer = new Timer(ExpireCallback, null, 0, timerSeconds * 1000);
         }
 
         protected override void Dispose(bool disposing)
@@ -60,16 +54,16 @@ namespace Heavysoft.Web.SessionState
 
             sessionData.Items = items;
             sessionData.StaticObjects = staticObjects;
-            sessionData.Expires = DateTime.Now.AddMinutes(timeout);
+            sessionData.Expires = DateTime.Now.AddMinutes(Timeout);
 
             try
             {
-                hashtableLock.EnterWriteLock();
-                sessionItems[sessionId] = sessionData;
+                HashtableLock.EnterWriteLock();
+                SessionItems[sessionId] = sessionData;
             }
             finally
             {
-                hashtableLock.ExitWriteLock();
+                HashtableLock.ExitWriteLock();
             }
 
             return sessionData;
@@ -77,22 +71,27 @@ namespace Heavysoft.Web.SessionState
 
         protected override SessionItem GetSessionItem(string sessionId)
         {
-            SessionItemEx sessionData = null;
+            SessionItemEx sessionData;
 
             try
             {
-                hashtableLock.EnterReadLock();
-                sessionData = (SessionItemEx)sessionItems[sessionId];
+                HashtableLock.EnterReadLock();
+                sessionData = (SessionItemEx)SessionItems[sessionId];
 
                 if (sessionData != null)
-                    sessionData.Expires = DateTime.Now.AddMinutes(timeout);
+                    sessionData.Expires = DateTime.Now.AddMinutes(Timeout);
             }
             finally
             {
-                hashtableLock.ExitReadLock();
+                HashtableLock.ExitReadLock();
             }
 
             return sessionData;
+        }
+
+        protected override void SaveSessionItem(string sessionId, IHttpSessionState state)
+        {
+            // This method is not required, because the hash table implementation stores data inside app domain.
         }
 
         /// <summary>
@@ -104,14 +103,14 @@ namespace Heavysoft.Web.SessionState
         {
             try
             {
-                hashtableLock.EnterWriteLock();
+                HashtableLock.EnterWriteLock();
 
-                this.RemoveExpiredSessionData();
+                RemoveExpiredSessionData();
 
             }
             finally
             {
-                hashtableLock.ExitWriteLock();
+                HashtableLock.ExitWriteLock();
             }
         }
 
@@ -120,29 +119,27 @@ namespace Heavysoft.Web.SessionState
         /// </summary>
         private void RemoveExpiredSessionData()
         {
-            string sessionID;
-
-            foreach (DictionaryEntry entry in sessionItems)
+            foreach (DictionaryEntry entry in SessionItems)
             {
                 SessionItemEx item = (SessionItemEx)entry.Value;
 
                 if (DateTime.Compare(item.Expires, DateTime.Now) <= 0)
                 {
-                    sessionID = entry.Key.ToString();
-                    sessionItems.Remove(entry.Key);
+                    var sessionId = entry.Key.ToString();
+                    SessionItems.Remove(entry.Key);
 
                     HttpSessionStateContainer stateProvider =
-                      new HttpSessionStateContainer(sessionID,
+                      new HttpSessionStateContainer(sessionId,
                                                    item.Items,
                                                    item.StaticObjects,
-                                                   timeout,
+                                                   Timeout,
                                                    false,
-                                                   cookieMode,
+                                                   CookieMode,
                                                    SessionStateMode.Custom,
                                                    false);
 
                     SessionStateUtility.RaiseSessionEnd(stateProvider, this, EventArgs.Empty);
-                    this.RemoveExpiredSessionData();
+                    RemoveExpiredSessionData();
                     break;
                 }
             }
@@ -153,12 +150,12 @@ namespace Heavysoft.Web.SessionState
         {
             try
             {
-                hashtableLock.EnterWriteLock();
-                sessionItems.Remove(sessionId);
+                HashtableLock.EnterWriteLock();
+                SessionItems.Remove(sessionId);
             }
             finally
             {
-                hashtableLock.ExitWriteLock();
+                HashtableLock.ExitWriteLock();
             }
         }
     }

@@ -1,32 +1,30 @@
-﻿using Heavysoft.Collections;
-using System;
+﻿using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.Collections.Specialized;
-using System.Linq;
-using System.Text;
+using System.Runtime.Serialization;
 using System.Threading;
 using System.Web.SessionState;
+using Heavysoft.Web.SessionState.Collections;
 
 namespace Heavysoft.Web.SessionState
 {
     [Serializable]
-    internal class ThreadSafeSessionStateItemCollection : ISessionStateItemCollection
+    public class ThreadSafeSessionStateItemCollection : ISessionStateItemCollection, IDeserializationCallback
     {
         /// <summary>
         /// Contains keys only. Values are not used.
         /// </summary>
-        private NameValueCollection dataKeys = new NameValueCollection();
+        private readonly NameValueCollection dataKeys = new NameValueCollection();
 
         /// <summary>
         /// Contains name-value pairs. Keys must be the same as in <see cref="dataKeys"/> collections.
         /// </summary>
-        private Hashtable dataValues = new Hashtable();
+        private readonly Hashtable dataValues = new Hashtable();
 
         [NonSerialized]
         private ReaderWriterLockSlim dataLock = new ReaderWriterLockSlim();
 
-        private object enumeratorLock = new object();
+        private readonly object enumeratorLock = new object();
 
         public void Clear()
         {
@@ -198,7 +196,7 @@ namespace Heavysoft.Web.SessionState
             get { throw new InvalidOperationException(); }
         }
 
-        public System.Collections.IEnumerator GetEnumerator()
+        public IEnumerator GetEnumerator()
         {
             try
             {
@@ -209,6 +207,11 @@ namespace Heavysoft.Web.SessionState
             {
                 dataLock.ExitReadLock();
             }
+        }
+
+        public void OnDeserialization(object sender)
+        {
+            dataLock = new ReaderWriterLockSlim();
         }
     }
 }

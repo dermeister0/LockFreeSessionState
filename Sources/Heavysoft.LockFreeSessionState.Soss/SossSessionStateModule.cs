@@ -1,11 +1,7 @@
-﻿using Heavysoft.Web.SessionState;
-using Soss.Client;
+﻿using Soss.Client;
 using System;
-using System.Collections.Generic;
+using System.Collections;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Web;
 using System.Web.SessionState;
 
@@ -14,9 +10,9 @@ namespace Heavysoft.Web.SessionState
     [Serializable]
     internal class SessionItemEx
     {
-        ISessionStateItemCollection items;
+        readonly ISessionStateItemCollection items;
 
-        byte[] staticObjects;
+        readonly byte[] staticObjects;
 
         public SessionItemEx(SessionItem data)
         {
@@ -66,7 +62,7 @@ namespace Heavysoft.Web.SessionState
             base.OnInit();
 
             namedCache = CacheFactory.GetCache("SossSessionState");
-            createPolicy = new CreatePolicy(TimeSpan.FromMinutes(timeout));
+            createPolicy = new CreatePolicy(TimeSpan.FromMinutes(Timeout));
         }
 
         protected override SessionItem AddNewSessionItem(string sessionId,
@@ -93,6 +89,22 @@ namespace Heavysoft.Web.SessionState
                 result = data.GetSessionItem();
 
             return result;
+        }
+
+        protected override void SaveSessionItem(string sessionId, IHttpSessionState state)
+        {
+            var sessionItem = new SessionItem();
+            sessionItem.Items = new ThreadSafeSessionStateItemCollection();
+            sessionItem.StaticObjects = state.StaticObjects;
+
+            foreach (DictionaryEntry item in state)
+            {
+                sessionItem.Items[item.Key.ToString()] = item.Value;
+            }
+
+            var data = new SessionItemEx(sessionItem);
+
+            namedCache.Insert(sessionId, data, createPolicy, true, false);
         }
 
         protected override void RemoveSessionItem(string sessionId)

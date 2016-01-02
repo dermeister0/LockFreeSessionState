@@ -1,7 +1,18 @@
-// HeavysoftVersion.cs is auto-generated.
-// Don't change it and add to .gitignore.
+# Change this template to control auto-generated version info file.
+# Available variables: {major} {minor} {patch} {build} {changeset}
+#
+# Example of project-based version:
+# [assembly: AssemblyVersion("2.0.0.0")]
+# [assembly: AssemblyFileVersion("2.15.{patch}.{build}")]
+# [assembly: AssemblyInformationalVersion("2.15.{patch}+{build}{changeset}")]
+#
+# Example of solution-based version (set in build script):
+# [assembly: AssemblyVersion("{major}.{minor}.0.0")]
+# [assembly: AssemblyFileVersion("{major}.{minor}.{patch}.{build}")]
+# [assembly: AssemblyInformationalVersion("{major}.{minor}.{patch}+{build}{changeset}")]
 
 using System.Reflection;
 
-[assembly: AssemblyVersion("0.0.0.0")]
-[assembly: AssemblyFileVersion("0.0.0.0")]
+[assembly: AssemblyVersion("1.1.0.0")]
+[assembly: AssemblyFileVersion("1.1.{patch}.{build}")]
+[assembly: AssemblyInformationalVersion("1.1.{patch}+{build}{changeset}")]

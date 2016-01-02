@@ -38,6 +38,7 @@
   </PropertyGroup>
   <PropertyGroup>
     <PowerShellExe Condition=" '$(PowerShellExe)'=='' ">%WINDIR%\System32\WindowsPowerShell\v1.0\powershell.exe</PowerShellExe>
+    <HeavysoftVersionPs1>$(MSBuildProjectDirectory)\..\packages\Heavysoft.VersionGenerator.*\tools\HeavysoftVersion.ps1</HeavysoftVersionPs1>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -55,7 +56,6 @@
     <None Include="LockFreeSessionState0.pfx" />
     <None Include="packages.config" />
     <None Include="Properties\HeavysoftVersion.cs.template" />
-    <None Include="Properties\HeavysoftVersion.ps1" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
@@ -64,7 +64,7 @@
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.-->
   <Target Name="BeforeBuild">
-    <Exec Command="$(PowerShellExe) -NonInteractive -Command &quot;&amp;{ $(ProjectDir)Properties\HeavysoftVersion.ps1 }&quot;" />
+    <Exec Command="$(PowerShellExe) -NonInteractive -NoProfile -ExecutionPolicy Bypass -Command &quot;&amp;{ $(HeavysoftVersionPs1); exit $LastExitCode }&quot;" />
   </Target>
   <!--<Target Name="AfterBuild">
   </Target>
