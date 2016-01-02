@@ -1,5 +1,6 @@
 ﻿using Soss.Client;
 using System;
+using System.Collections;
 using System.IO;
 using System.Web;
 using System.Web.SessionState;
@@ -88,6 +89,22 @@ namespace Heavysoft.Web.SessionState
                 result = data.GetSessionItem();
 
             return result;
+        }
+
+        protected override void SaveSessionItem(string sessionId, IHttpSessionState state)
+        {
+            var sessionItem = new SessionItem();
+            sessionItem.Items = new ThreadSafeSessionStateItemCollection();
+            sessionItem.StaticObjects = state.StaticObjects;
+
+            foreach (DictionaryEntry item in state)
+            {
+                sessionItem.Items[item.Key.ToString()] = item.Value;
+            }
+
+            var data = new SessionItemEx(sessionItem);
+
+            namedCache.Insert(sessionId, data, createPolicy, true, false);
         }
 
         protected override void RemoveSessionItem(string sessionId)

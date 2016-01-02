@@ -89,6 +89,11 @@ namespace Heavysoft.Web.SessionState
             return sessionData;
         }
 
+        protected override void SaveSessionItem(string sessionId, IHttpSessionState state)
+        {
+            // This method is not required, because the hash table implementation stores data inside app domain.
+        }
+
         /// <summary>
         /// Called periodically by the Timer created in the Init method to check for  
         /// expired sessions and remove expired data. 
