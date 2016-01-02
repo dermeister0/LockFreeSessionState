@@ -27,7 +27,7 @@ Uses Hashtable-based implementation from MSDN.
       <system.webServer>
         <modules>
           <remove name="Session" />
-          <add name="Session" type="Heavysoft.Web.SessionState.HashTableSessionStateModule,Heavysoft.LockFreeSessionState.HashTable,PublicKeyToken=ea16f0ccebd288da" />      
+          <add name="Session" type="Heavysoft.Web.SessionState.HashTableSessionStateModule,Heavysoft.LockFreeSessionState.HashTable,PublicKeyToken=12eed1a4d3dc558d" />      
         </modules>
       </system.webServer>
     ```
