@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Text;
 using System.Threading;
 using System.Web.SessionState;
@@ -11,7 +12,7 @@ using System.Web.SessionState;
 namespace Heavysoft.Web.SessionState
 {
     [Serializable]
-    internal class ThreadSafeSessionStateItemCollection : ISessionStateItemCollection
+    internal class ThreadSafeSessionStateItemCollection : ISessionStateItemCollection, IDeserializationCallback
     {
         /// <summary>
         /// Contains keys only. Values are not used.
@@ -209,6 +210,11 @@ namespace Heavysoft.Web.SessionState
             {
                 dataLock.ExitReadLock();
             }
+        }
+
+        public void OnDeserialization(object sender)
+        {
+            dataLock = new ReaderWriterLockSlim();
         }
     }
 }
