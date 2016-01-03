@@ -1,6 +1,5 @@
 ﻿using Soss.Client;
 using System;
-using System.Collections;
 using System.IO;
 using System.Web;
 using System.Web.SessionState;
@@ -69,12 +68,12 @@ namespace Heavysoft.Web.SessionState
                                                          HttpStaticObjectsCollection staticObjects)
         {
             var sessionItem = new SessionItem();
-            sessionItem.Items = new SossSessionStateItemCollection();
+            sessionItem.Items = new SossSessionStateItemCollection(sessionId, Timeout);
             sessionItem.StaticObjects = staticObjects;
 
             var data = new SessionItemEx(sessionItem);
 
-            namedCache.Insert(sessionId, data, createPolicy, true, false);
+            //@@namedCache.Insert(sessionId, data, createPolicy, true, false);
 
             return sessionItem;
         }
