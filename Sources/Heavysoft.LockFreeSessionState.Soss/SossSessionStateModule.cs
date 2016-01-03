@@ -69,7 +69,7 @@ namespace Heavysoft.Web.SessionState
                                                          HttpStaticObjectsCollection staticObjects)
         {
             var sessionItem = new SessionItem();
-            sessionItem.Items = new ThreadSafeSessionStateItemCollection();
+            sessionItem.Items = new SossSessionStateItemCollection();
             sessionItem.StaticObjects = staticObjects;
 
             var data = new SessionItemEx(sessionItem);

@@ -8,7 +8,7 @@ namespace Heavysoft.Web.SessionState.Collections
     /// 
     /// </summary>
     /// <remarks>http://www.codeproject.com/Articles/56575/Thread-safe-enumeration-in-C</remarks>
-    public sealed class SafeEnumerator : IEnumerator, IDisposable
+    internal sealed class SafeEnumerator : IEnumerator, IDisposable
     {
         // this is the (thread-unsafe)
         // enumerator of the underlying collection

@@ -9,7 +9,7 @@ using Heavysoft.Web.SessionState.Collections;
 namespace Heavysoft.Web.SessionState
 {
     [Serializable]
-    public class ThreadSafeSessionStateItemCollection : ISessionStateItemCollection, IDeserializationCallback
+    internal class ThreadSafeSessionStateItemCollection : ISessionStateItemCollection, IDeserializationCallback
     {
         /// <summary>
         /// Contains keys only. Values are not used.
