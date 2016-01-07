@@ -76,6 +76,13 @@ namespace Heavysoft.LockFreeSessionState.Test
         }
 
         [TestMethod]
+        public void TestModifyWithExistingEnumerator()
+        {
+            var enumerator = sessionState.GetEnumerator();
+            sessionState["D"] = "d";
+        }
+
+        [TestMethod]
         public void TestThreadSafety()
         {
             var result = new List<object>();
