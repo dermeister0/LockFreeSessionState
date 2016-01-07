@@ -4,17 +4,15 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Web.SessionState;
 using Heavysoft.Web.SessionState;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Xunit;
 
 namespace Heavysoft.LockFreeSessionState.Test
 {
-    [TestClass]
     public class SafeEnumeratorTest
     {
         private ISessionStateItemCollection sessionState;
 
-        [TestInitialize]
-        public void Initialize()
+        public SafeEnumeratorTest()
         {
             sessionState = new ThreadSafeSessionStateItemCollection();
             sessionState["A"] = "a";
@@ -22,7 +20,7 @@ namespace Heavysoft.LockFreeSessionState.Test
             sessionState["C"] = "c";
         }
 
-        [TestMethod]
+        [Fact]
         public void TestBasic()
         {
             var result = new List<object>();
@@ -31,11 +29,11 @@ namespace Heavysoft.LockFreeSessionState.Test
                 result.Add(obj);
             }
 
-            Assert.AreEqual(3, sessionState.Count);
-            Assert.AreEqual(3, result.Count);
+            Assert.Equal(3, sessionState.Count);
+            Assert.Equal(3, result.Count);
         }
 
-        [TestMethod]
+        [Fact]
         public void TestAsync()
         {
             var result = new List<object>();
@@ -49,11 +47,11 @@ namespace Heavysoft.LockFreeSessionState.Test
 
             task.Wait();
 
-            Assert.AreEqual(3, sessionState.Count);
-            Assert.AreEqual(3, result.Count);
+            Assert.Equal(3, sessionState.Count);
+            Assert.Equal(3, result.Count);
         }
 
-        [TestMethod]
+        [Fact]
         public void TestAsync2()
         {
             var result = new List<object>();
@@ -71,18 +69,18 @@ namespace Heavysoft.LockFreeSessionState.Test
 
             Task.WaitAll(new[] { task1, task2 }, -1);
 
-            Assert.AreEqual(3, sessionState.Count);
-            Assert.AreEqual(6, result.Count);
+            Assert.Equal(3, sessionState.Count);
+            Assert.Equal(6, result.Count);
         }
 
-        [TestMethod]
+        [Fact]
         public void TestModifyWithExistingEnumerator()
         {
             var enumerator = sessionState.GetEnumerator();
             sessionState["D"] = "d";
         }
 
-        [TestMethod]
+        [Fact]
         public void TestThreadSafety()
         {
             var result = new List<object>();
@@ -108,7 +106,7 @@ namespace Heavysoft.LockFreeSessionState.Test
             
             Task.WaitAll(new Task[] { task1, task2 }, -1);
 
-            Assert.AreEqual(4, result.Count);
+            Assert.Equal(4, result.Count);
         }
     }
 }
