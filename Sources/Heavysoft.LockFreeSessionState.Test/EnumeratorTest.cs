@@ -1,20 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Web.SessionState;
-using Heavysoft.Web.SessionState;
 using Xunit;
 
 namespace Heavysoft.LockFreeSessionState.Test
 {
-    public class SafeEnumeratorTest
+    public abstract class EnumeratorTest
     {
         private ISessionStateItemCollection sessionState;
 
-        public SafeEnumeratorTest()
+        public EnumeratorTest(ISessionStateItemCollection sessionState)
         {
-            sessionState = new ThreadSafeSessionStateItemCollection();
+            this.sessionState = sessionState;
             sessionState["A"] = "a";
             sessionState["B"] = "b";
             sessionState["C"] = "c";
