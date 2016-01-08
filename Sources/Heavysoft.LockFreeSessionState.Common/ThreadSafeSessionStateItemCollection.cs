@@ -197,7 +197,7 @@ namespace Heavysoft.Web.SessionState
 
         public IEnumerator GetEnumerator()
         {
-            return new SafeEnumerator(dataValues.GetEnumerator(), dataLock);
+            return new SafeEnumerator(dataKeys.GetEnumerator(), dataLock);
         }
 
         public void OnDeserialization(object sender)
