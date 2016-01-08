@@ -21,7 +21,7 @@ namespace Heavysoft.Web.SessionState.Collections
             this.inner = inner;
             this.lockSlim = lockSlim;
             // entering lock in constructor
-            lockSlim.EnterReadLock();
+            lockSlim.EnterUpgradeableReadLock();
         }
 
         #region Implementation of IDisposable
@@ -30,7 +30,7 @@ namespace Heavysoft.Web.SessionState.Collections
         {
             // .. and exiting lock on Dispose()
             // This will be called when foreach loop finishes
-            lockSlim.ExitReadLock();
+            lockSlim.ExitUpgradeableReadLock();
         }
 
         #endregion
