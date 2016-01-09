@@ -24,8 +24,6 @@ namespace Heavysoft.Web.SessionState
         [NonSerialized]
         private ReaderWriterLockSlim dataLock = new ReaderWriterLockSlim();
 
-        private readonly object enumeratorLock = new object();
-
         public void Clear()
         {
             try
@@ -198,15 +196,7 @@ namespace Heavysoft.Web.SessionState
 
         public IEnumerator GetEnumerator()
         {
-            try
-            {
-                dataLock.EnterReadLock();
-                return new SafeEnumerator(dataValues.GetEnumerator(), enumeratorLock);
-            }
-            finally
-            {
-                dataLock.ExitReadLock();
-            }
+            return new SafeEnumerator(dataKeys.GetEnumerator(), dataLock);
         }
 
         public void OnDeserialization(object sender)
