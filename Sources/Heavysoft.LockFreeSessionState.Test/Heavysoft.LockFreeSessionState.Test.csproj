@@ -71,6 +71,7 @@
     <Compile Include="HashMapGeneralTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="EnumeratorTest.cs" />
+    <Compile Include="SossEnumeratorTest.cs" />
     <Compile Include="SossGeneralTest.cs" />
     <Compile Include="StandardEnumeratorTest.cs" />
     <Compile Include="StandardGeneralTest.cs" />

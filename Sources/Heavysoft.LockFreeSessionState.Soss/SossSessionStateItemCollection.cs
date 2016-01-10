@@ -1,10 +1,6 @@
 ﻿using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.Collections.Specialized;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
 using System.Web.SessionState;
 using Soss.Client;
 
@@ -15,14 +11,18 @@ namespace Heavysoft.Web.SessionState
         private const int KeyPrefixIndex = 0;
 
         private readonly string keyPrefix;
+        private readonly string countIndex;
         private readonly CreatePolicy createPolicy;
+        private readonly CreatePolicy infinitePolicy;
         private readonly NamedCache namedCache;
         private readonly IndexValue keyPrefixIndexValue;
 
         public SossSessionStateItemCollection(string keyPrefix, int timeout)
         {
             this.keyPrefix = keyPrefix + "_";
+            countIndex = keyPrefix + ".Count";
             createPolicy = new CreatePolicy(TimeSpan.FromMinutes(timeout));
+            infinitePolicy = new CreatePolicy(TimeSpan.Zero);
 
             namedCache = CacheFactory.GetCache("SossSessionState");
             keyPrefixIndexValue = new IndexValue(keyPrefix);
@@ -61,7 +61,7 @@ namespace Heavysoft.Web.SessionState
 
         public void Clear()
         {
-            throw new NotImplementedException();
+            namedCache.Clear();
         }
 
         object ISessionStateItemCollection.this[string name]
@@ -113,14 +113,15 @@ namespace Heavysoft.Web.SessionState
             return dataKeys.Keys;
         }
 
-        private void IncrementCount(int count)
+        private void IncrementCount(int increment)
         {
-            // @@
+            var countValue = (int?) namedCache.Retrieve(countIndex, true) ?? 0;
+            namedCache.Insert(countIndex, countValue + increment, infinitePolicy, true, false);
         }
 
         private int GetCount()
         {
-            return 0; // @@
+            return (int?) namedCache.Retrieve(countIndex, false) ?? 0;
         }
     }
 }

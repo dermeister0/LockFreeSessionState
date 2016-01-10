@@ -15,6 +15,7 @@ namespace Heavysoft.LockFreeSessionState.Test
         [Fact]
         public void TestCount()
         {
+            SessionState.Clear();
             Assert.Equal(0, SessionState.Count);
 
             SessionState["KeyA"] = 1;
