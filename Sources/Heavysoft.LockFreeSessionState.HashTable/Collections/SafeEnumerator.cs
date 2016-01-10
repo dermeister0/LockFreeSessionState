@@ -8,20 +8,20 @@ namespace Heavysoft.Web.SessionState.Collections
     /// 
     /// </summary>
     /// <remarks>http://www.codeproject.com/Articles/56575/Thread-safe-enumeration-in-C</remarks>
-    public sealed class SafeEnumerator : IEnumerator, IDisposable
+    internal sealed class SafeEnumerator : IEnumerator, IDisposable
     {
         // this is the (thread-unsafe)
         // enumerator of the underlying collection
         private readonly IEnumerator inner;
         // this is the object we shall lock on. 
-        private readonly object lockObject;
+        private readonly ReaderWriterLockSlim lockSlim;
 
-        public SafeEnumerator(IEnumerator inner, object lockObject)
+        public SafeEnumerator(IEnumerator inner, ReaderWriterLockSlim lockSlim)
         {
             this.inner = inner;
-            this.lockObject = lockObject;
+            this.lockSlim = lockSlim;
             // entering lock in constructor
-            Monitor.Enter(lockObject);
+            lockSlim.EnterUpgradeableReadLock();
         }
 
         #region Implementation of IDisposable
@@ -30,7 +30,7 @@ namespace Heavysoft.Web.SessionState.Collections
         {
             // .. and exiting lock on Dispose()
             // This will be called when foreach loop finishes
-            Monitor.Exit(lockObject);
+            lockSlim.ExitUpgradeableReadLock();
         }
 
         #endregion

@@ -44,8 +44,10 @@
     <Compile Include="..\Heavysoft.LockFreeSessionState.Common\Properties\HeavysoftVersion.cs">
       <Link>Properties\HeavysoftVersion.cs</Link>
     </Compile>
+    <Compile Include="Collections\SafeEnumerator.cs" />
     <Compile Include="HashTableSessionStateModule.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ThreadSafeSessionStateItemCollection.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Heavysoft.LockFreeSessionState.Common\Heavysoft.LockFreeSessionState.Common.csproj">
