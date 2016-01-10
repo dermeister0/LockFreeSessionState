@@ -16,7 +16,7 @@ namespace Heavysoft.LockFreeSessionState.Test
             Initialize();
         }
 
-        protected void Initialize()
+        private void Initialize()
         {
             SessionState.Clear();
             SessionState["KeyA"] = "a";

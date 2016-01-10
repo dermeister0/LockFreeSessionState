@@ -40,7 +40,7 @@ namespace Heavysoft.Web.SessionState
 
         public void CopyTo(Array array, int index)
         {
-            GetCachedObjects().Select(co => co.Value).ToArray().CopyTo(array, index);            
+            GetKeys().Cast<string>().ToArray().CopyTo(array, index);            
         }
 
         public int Count => GetCount();

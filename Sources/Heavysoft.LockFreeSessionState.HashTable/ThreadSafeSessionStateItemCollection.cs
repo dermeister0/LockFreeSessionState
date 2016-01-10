@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Specialized;
+using System.Linq;
 using System.Runtime.Serialization;
 using System.Threading;
 using System.Web.SessionState;
@@ -160,7 +161,7 @@ namespace Heavysoft.Web.SessionState
             try
             {
                 dataLock.EnterReadLock();
-                dataValues.CopyTo(array, index);
+                dataKeys.Keys.Cast<string>().ToArray().CopyTo(array, index);
             }
             finally
             {
