@@ -86,17 +86,6 @@ namespace Heavysoft.LockFreeSessionState.Test
         }
 
         [Fact]
-        public void TestModifyWithExistingEnumerator2()
-        {
-            var enumerator = SessionState.GetEnumerator();
-            enumerator.MoveNext();
-            SessionState["D"] = "d";
-
-            var obj = enumerator.Current;
-            Assert.Equal("KeyA", obj);
-        }
-
-        [Fact]
         public void TestModifyWithExistingEnumerator3()
         {
             var enumerator = SessionState.GetEnumerator();

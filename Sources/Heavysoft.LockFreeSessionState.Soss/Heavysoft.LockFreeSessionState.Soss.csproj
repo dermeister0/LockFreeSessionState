@@ -53,6 +53,8 @@
     <Compile Include="..\Heavysoft.LockFreeSessionState.Common\Properties\HeavysoftVersion.cs">
       <Link>Properties\HeavysoftVersion.cs</Link>
     </Compile>
+    <Compile Include="Collections\VersionedEnumerator.cs" />
+    <Compile Include="IVersionedCollection.cs" />
     <Compile Include="SossSessionStateItemCollection.cs" />
     <Compile Include="SossSessionStateModule.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

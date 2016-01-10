@@ -38,5 +38,16 @@ namespace Heavysoft.LockFreeSessionState.Test
 
             Task.WaitAll(new Task[] { task1, task2 }, -1);
         }
+
+        [Fact]
+        public void TestModifyWithExistingEnumerator2()
+        {
+            var enumerator = SessionState.GetEnumerator();
+            enumerator.MoveNext();
+            SessionState["D"] = "d";
+
+            var obj = enumerator.Current;
+            Assert.Equal("KeyA", obj);
+        }
     }
 }

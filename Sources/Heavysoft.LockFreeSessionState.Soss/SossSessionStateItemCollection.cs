@@ -4,16 +4,18 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
 using System.Web.SessionState;
+using Heavysoft.Web.SessionState.Collections;
 using Soss.Client;
 
 namespace Heavysoft.Web.SessionState
 {
-    internal class SossSessionStateItemCollection : ISessionStateItemCollection
+    internal class SossSessionStateItemCollection : ISessionStateItemCollection, IVersioned
     {
         private const int KeyPrefixIndex = 0;
 
         private readonly string keyPrefix;
         private readonly string countIndex;
+        private readonly string versionIndex;
         private readonly CreatePolicy createPolicy;
         private readonly CreatePolicy infinitePolicy;
         private readonly NamedCache namedCache;
@@ -23,6 +25,7 @@ namespace Heavysoft.Web.SessionState
         {
             this.keyPrefix = keyPrefix + "_";
             countIndex = keyPrefix + ".Count";
+            versionIndex = keyPrefix + ".Version";
             createPolicy = new CreatePolicy(TimeSpan.FromMinutes(timeout));
             infinitePolicy = new CreatePolicy(TimeSpan.Zero);
 
@@ -35,7 +38,7 @@ namespace Heavysoft.Web.SessionState
 
         public IEnumerator GetEnumerator()
         {
-            return GetKeys().GetEnumerator();
+            return new VersionedEnumerator(GetKeys().GetEnumerator(), this);
         }
 
         public void CopyTo(Array array, int index)
@@ -50,6 +53,7 @@ namespace Heavysoft.Web.SessionState
         {
             namedCache.Remove(keyPrefix + name);
             IncrementCount(-1);
+            IncrementVersion();
         }
 
         public void RemoveAt(int index)
@@ -63,6 +67,7 @@ namespace Heavysoft.Web.SessionState
 
         public void Clear()
         {
+            // FIXME: Don't delete all keys in collection. Need to check key prefix.
             namedCache.Clear();
         }
 
@@ -80,6 +85,8 @@ namespace Heavysoft.Web.SessionState
 
         public NameObjectCollectionBase.KeysCollection Keys => GetKeys();
         public bool Dirty { get; set; }
+
+        int IVersioned.Version => GetVersion();
 
         private object GetItem(string name)
         {
@@ -103,7 +110,9 @@ namespace Heavysoft.Web.SessionState
                 metadata.IndexCollection[KeyPrefixIndex] = keyPrefixIndexValue;
 
                 namedCache.SetMetadata(fullKey, metadata, true);
-            }            
+            }
+
+            IncrementVersion();
         }
 
         private IEnumerable<CachedObjectId> GetCachedObjects()
@@ -126,15 +135,35 @@ namespace Heavysoft.Web.SessionState
             return dataKeys.Keys;
         }
 
+        private void IncrementInternalValue(string key, int increment)
+        {
+            var countValue = (int?) namedCache.Retrieve(key, true) ?? 0;
+            namedCache.Insert(key, countValue + increment, infinitePolicy, true, false);
+        }
+
+        private int GetInternalValue(string key)
+        {
+            return (int?) namedCache.Retrieve(countIndex, false) ?? 0;
+        }
+
         private void IncrementCount(int increment)
         {
-            var countValue = (int?) namedCache.Retrieve(countIndex, true) ?? 0;
-            namedCache.Insert(countIndex, countValue + increment, infinitePolicy, true, false);
+            IncrementInternalValue(countIndex, increment);
         }
 
         private int GetCount()
         {
-            return (int?) namedCache.Retrieve(countIndex, false) ?? 0;
+            return GetInternalValue(countIndex);
+        }
+
+        private void IncrementVersion()
+        {
+            IncrementInternalValue(versionIndex, 1);
+        }
+
+        private int GetVersion()
+        {
+            return GetInternalValue(versionIndex);
         }
     }
 }
