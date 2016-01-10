@@ -13,9 +13,15 @@ namespace Heavysoft.LockFreeSessionState.Test
         public EnumeratorTest(ISessionStateItemCollection sessionState)
         {
             SessionState = sessionState;
+            Initialize();
+        }
+
+        protected void Initialize()
+        {
+            SessionState.Clear();
             SessionState["KeyA"] = "a";
-            SessionState["B"] = "b";
-            SessionState["C"] = "c";
+            SessionState["KeyB"] = "b";
+            SessionState["KeyC"] = "c";
         }
 
         [Fact]

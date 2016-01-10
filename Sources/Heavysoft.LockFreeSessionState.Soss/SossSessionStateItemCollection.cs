@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Collections.Specialized;
+using System.Linq;
 using System.Web.SessionState;
 using Soss.Client;
 
@@ -33,12 +35,12 @@ namespace Heavysoft.Web.SessionState
 
         public IEnumerator GetEnumerator()
         {
-            throw new NotImplementedException();
+            return GetKeys().GetEnumerator();
         }
 
         public void CopyTo(Array array, int index)
         {
-            throw new NotImplementedException();
+            GetCachedObjects().Select(co => co.Value).ToArray().CopyTo(array, index);            
         }
 
         public int Count => GetCount();
@@ -66,18 +68,23 @@ namespace Heavysoft.Web.SessionState
 
         object ISessionStateItemCollection.this[string name]
         {
-            get { return namedCache.Retrieve(keyPrefix + name, false); }
+            get { return GetItem(name); }
             set { SetItem(name, value); }
         }
 
         object ISessionStateItemCollection.this[int index]
         {
-            get { throw new NotImplementedException(); }
-            set { throw new NotImplementedException(); }
+            get { return GetItem(GetKeys()[index]); }
+            set { SetItem(GetKeys()[index], value); }
         }
 
         public NameObjectCollectionBase.KeysCollection Keys => GetKeys();
         public bool Dirty { get; set; }
+
+        private object GetItem(string name)
+        {
+            return namedCache.Retrieve(keyPrefix + name, false);
+        }
 
         private void SetItem(string name, object value)
         {
@@ -99,13 +106,19 @@ namespace Heavysoft.Web.SessionState
             }            
         }
 
-        private NameObjectCollectionBase.KeysCollection GetKeys()
+        private IEnumerable<CachedObjectId> GetCachedObjects()
         {
-            var dataKeys = new NameValueCollection();
             var filter = new FilterCollection();
             filter[KeyPrefixIndex] = keyPrefixIndexValue;
 
-            foreach (CachedObjectId cachedObject in namedCache.Query(filter))
+            return namedCache.Query(filter).Cast<CachedObjectId>();
+        }
+
+        private NameObjectCollectionBase.KeysCollection GetKeys()
+        {
+            var dataKeys = new NameValueCollection();
+
+            foreach (var cachedObject in GetCachedObjects())
             {
                 dataKeys.Add(cachedObject.Key.GetKeyString().Substring(keyPrefix.Length), null);
             }
