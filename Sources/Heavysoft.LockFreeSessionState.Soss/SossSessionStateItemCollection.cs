@@ -20,6 +20,7 @@ namespace Heavysoft.Web.SessionState
         private readonly CreatePolicy infinitePolicy;
         private readonly NamedCache namedCache;
         private readonly IndexValue keyPrefixIndexValue;
+        private readonly IndexValue keyPrefixInternalIndexValue;
 
         public SossSessionStateItemCollection(string keyPrefix, int timeout)
         {
@@ -30,7 +31,8 @@ namespace Heavysoft.Web.SessionState
             infinitePolicy = new CreatePolicy(TimeSpan.Zero);
 
             namedCache = CacheFactory.GetCache("SossSessionState");
-            keyPrefixIndexValue = new IndexValue(keyPrefix);
+            keyPrefixIndexValue = new IndexValue(this.keyPrefix);
+            keyPrefixInternalIndexValue = new IndexValue(keyPrefix + ".");
 
             SyncRoot = new object();
             IsSynchronized = true;
@@ -67,8 +69,15 @@ namespace Heavysoft.Web.SessionState
 
         public void Clear()
         {
-            // FIXME: Don't delete all keys in collection. Need to check key prefix.
-            namedCache.Clear();
+            var keys = new List<CachedObjectId>();
+
+            keys.InsertRange(0, GetCachedObjects(keyPrefixIndexValue));
+            keys.InsertRange(0, GetCachedObjects(keyPrefixInternalIndexValue));
+
+            foreach (var key in keys)
+            {
+                namedCache.Remove(key);
+            }
         }
 
         object ISessionStateItemCollection.this[string name]
@@ -115,10 +124,10 @@ namespace Heavysoft.Web.SessionState
             IncrementVersion();
         }
 
-        private IEnumerable<CachedObjectId> GetCachedObjects()
+        private IEnumerable<CachedObjectId> GetCachedObjects(IndexValue indexValue)
         {
             var filter = new FilterCollection();
-            filter[KeyPrefixIndex] = keyPrefixIndexValue;
+            filter[KeyPrefixIndex] = indexValue;
 
             return namedCache.Query(filter).Cast<CachedObjectId>();
         }
@@ -127,9 +136,9 @@ namespace Heavysoft.Web.SessionState
         {
             var dataKeys = new NameValueCollection();
 
-            foreach (var cachedObject in GetCachedObjects())
+            foreach (var cachedObject in GetCachedObjects(keyPrefixIndexValue))
             {
-                dataKeys.Add(cachedObject.Key.GetKeyString().Substring(keyPrefix.Length), null);
+                dataKeys.Add(cachedObject.GetStringKey().Substring(keyPrefix.Length), null);
             }
 
             return dataKeys.Keys;
@@ -138,7 +147,21 @@ namespace Heavysoft.Web.SessionState
         private void IncrementInternalValue(string key, int increment)
         {
             var countValue = (int?) namedCache.Retrieve(key, true) ?? 0;
-            namedCache.Insert(key, countValue + increment, infinitePolicy, true, false);
+            var newValue = countValue + increment;
+
+            if (namedCache.Contains(key))
+            {
+                namedCache.Update(key, newValue, true);
+            }
+            else
+            {
+                namedCache.Insert(key, newValue, infinitePolicy, true, true);
+
+                var metadata = new ObjectMetadata();
+                metadata.IndexCollection[KeyPrefixIndex] = keyPrefixInternalIndexValue;
+
+                namedCache.SetMetadata(key, metadata, true);
+            }
         }
 
         private int GetInternalValue(string key)
