@@ -40,5 +40,16 @@ namespace Heavysoft.LockFreeSessionState.Test
 
             Assert.Equal(4, result.Count);
         }
+
+        [Fact]
+        public void TestModifyWithExistingEnumerator2()
+        {
+            var enumerator = SessionState.GetEnumerator();
+            enumerator.MoveNext();
+            SessionState["D"] = "d";
+
+            var obj = enumerator.Current;
+            Assert.Equal("KeyA", obj);
+        }
     }
 }

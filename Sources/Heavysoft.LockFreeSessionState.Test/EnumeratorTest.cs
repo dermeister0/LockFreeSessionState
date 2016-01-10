@@ -13,9 +13,15 @@ namespace Heavysoft.LockFreeSessionState.Test
         public EnumeratorTest(ISessionStateItemCollection sessionState)
         {
             SessionState = sessionState;
+            Initialize();
+        }
+
+        private void Initialize()
+        {
+            SessionState.Clear();
             SessionState["KeyA"] = "a";
-            SessionState["B"] = "b";
-            SessionState["C"] = "c";
+            SessionState["KeyB"] = "b";
+            SessionState["KeyC"] = "c";
         }
 
         [Fact]
@@ -77,17 +83,6 @@ namespace Heavysoft.LockFreeSessionState.Test
             var enumerator = SessionState.GetEnumerator();
             SessionState["D"] = "d";
             Assert.Throws<InvalidOperationException>(() => enumerator.MoveNext());
-        }
-
-        [Fact]
-        public void TestModifyWithExistingEnumerator2()
-        {
-            var enumerator = SessionState.GetEnumerator();
-            enumerator.MoveNext();
-            SessionState["D"] = "d";
-
-            var obj = enumerator.Current;
-            Assert.Equal("KeyA", obj);
         }
 
         [Fact]

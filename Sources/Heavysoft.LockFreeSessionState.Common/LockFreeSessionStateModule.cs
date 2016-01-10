@@ -123,7 +123,6 @@ namespace Heavysoft.Web.SessionState
                 isNew = true;
 
                 sessionData = AddNewSessionItem(sessionId,
-                                                new ThreadSafeSessionStateItemCollection(),
                                                 SessionStateUtility.GetSessionStaticObjects(context));
             }
 
@@ -163,20 +162,14 @@ namespace Heavysoft.Web.SessionState
             // Read the session state from the context
             HttpSessionStateContainer stateProvider = (HttpSessionStateContainer)(SessionStateUtility.GetHttpSessionStateFromContext(context));
 
-            var sessionId = sessionIdManager.GetSessionID(context);
-
             // If Session.Abandon() was called, remove the session data from the local Hashtable 
             // and execute the Session_OnEnd event from the Global.asax file. 
             if (stateProvider.IsAbandoned)
             {
+                var sessionId = sessionIdManager.GetSessionID(context);
                 RemoveSessionItem(sessionId);
 
                 SessionStateUtility.RaiseSessionEnd(stateProvider, this, EventArgs.Empty);
-            }
-            else
-            {
-                // Save session data.
-                SaveSessionItem(sessionId, stateProvider);
             }
 
             SessionStateUtility.RemoveHttpSessionStateFromContext(context);
@@ -187,12 +180,9 @@ namespace Heavysoft.Web.SessionState
         }
 
         protected abstract SessionItem AddNewSessionItem(string sessionId,
-                                                         ISessionStateItemCollection items,
                                                          HttpStaticObjectsCollection staticObjects);
 
         protected abstract SessionItem GetSessionItem(string sessionId);
-
-        protected abstract void SaveSessionItem(string sessionId, IHttpSessionState state);
 
         protected abstract void RemoveSessionItem(string sessionId);
     }

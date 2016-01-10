@@ -47,12 +47,11 @@ namespace Heavysoft.Web.SessionState
         }
         
         protected override SessionItem AddNewSessionItem(string sessionId,
-                                                         ISessionStateItemCollection items,
                                                          HttpStaticObjectsCollection staticObjects)
         {
             var sessionData = new SessionItemEx();
 
-            sessionData.Items = items;
+            sessionData.Items = new ThreadSafeSessionStateItemCollection();
             sessionData.StaticObjects = staticObjects;
             sessionData.Expires = DateTime.Now.AddMinutes(Timeout);
 
@@ -87,11 +86,6 @@ namespace Heavysoft.Web.SessionState
             }
 
             return sessionData;
-        }
-
-        protected override void SaveSessionItem(string sessionId, IHttpSessionState state)
-        {
-            // This method is not required, because the hash table implementation stores data inside app domain.
         }
 
         /// <summary>

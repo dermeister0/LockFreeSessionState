@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Specialized;
+using System.Linq;
 using System.Runtime.Serialization;
 using System.Threading;
 using System.Web.SessionState;
@@ -9,7 +10,7 @@ using Heavysoft.Web.SessionState.Collections;
 namespace Heavysoft.Web.SessionState
 {
     [Serializable]
-    public class ThreadSafeSessionStateItemCollection : ISessionStateItemCollection, IDeserializationCallback
+    internal class ThreadSafeSessionStateItemCollection : ISessionStateItemCollection, IDeserializationCallback
     {
         /// <summary>
         /// Contains keys only. Values are not used.
@@ -160,7 +161,7 @@ namespace Heavysoft.Web.SessionState
             try
             {
                 dataLock.EnterReadLock();
-                dataValues.CopyTo(array, index);
+                dataKeys.Keys.Cast<string>().ToArray().CopyTo(array, index);
             }
             finally
             {

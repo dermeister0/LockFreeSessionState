@@ -32,6 +32,12 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>true</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyOriginatorKeyFile>LockFreeSessionState0.pfx</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -60,18 +66,28 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="GeneralTest.cs" />
     <Compile Include="HashMapEnumeratorTest.cs" />
+    <Compile Include="HashMapGeneralTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="EnumeratorTest.cs" />
+    <Compile Include="SossEnumeratorTest.cs" />
+    <Compile Include="SossGeneralTest.cs" />
     <Compile Include="StandardEnumeratorTest.cs" />
+    <Compile Include="StandardGeneralTest.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="LockFreeSessionState0.pfx" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Heavysoft.LockFreeSessionState.Common\Heavysoft.LockFreeSessionState.Common.csproj">
-      <Project>{39856aae-56ca-4955-a756-2e7638b5d0ab}</Project>
-      <Name>Heavysoft.LockFreeSessionState.Common</Name>
+    <ProjectReference Include="..\Heavysoft.LockFreeSessionState.HashTable\Heavysoft.LockFreeSessionState.HashTable.csproj">
+      <Project>{9d146256-9e7e-4f10-b6f7-299e946e30f6}</Project>
+      <Name>Heavysoft.LockFreeSessionState.HashTable</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Heavysoft.LockFreeSessionState.Soss\Heavysoft.LockFreeSessionState.Soss.csproj">
+      <Project>{c0a52e75-d805-400f-b207-7812590c7630}</Project>
+      <Name>Heavysoft.LockFreeSessionState.Soss</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
