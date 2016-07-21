@@ -10,10 +10,10 @@
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>$description$</description>
     <copyright>Copyright © 2014 Der_Meister</copyright>
-	<frameworkAssemblies>
-		<frameworkAssembly assemblyName="System" targetFramework="net40" />
-		<frameworkAssembly assemblyName="System.Configuration" targetFramework="net40" />
-		<frameworkAssembly assemblyName="System.Web" targetFramework="net40" />
-	</frameworkAssemblies>
+    <frameworkAssemblies>
+        <frameworkAssembly assemblyName="System" targetFramework="net40" />
+        <frameworkAssembly assemblyName="System.Configuration" targetFramework="net40" />
+        <frameworkAssembly assemblyName="System.Web" targetFramework="net40" />
+    </frameworkAssemblies>
   </metadata>
 </package>

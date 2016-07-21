@@ -10,7 +10,9 @@ function Invoke-NugetRestore([string] $solutionPath)
     
     if (!(Test-Path $nugetExePath))
     {
-        Invoke-WebRequest 'http://nuget.org/nuget.exe' -OutFile $nugetExePath
+        # https://dist.nuget.org/win-x86-commandline/latest/nuget.exe
+        # Warning: NuGet 3.4.4 does not support SemVer 2.0.
+        Invoke-WebRequest 'https://dist.nuget.org/win-x86-commandline/v3.5.0-beta2/NuGet.exe' -OutFile $nugetExePath
     }
     
     &$nugetExePath 'restore' $solutionPath
