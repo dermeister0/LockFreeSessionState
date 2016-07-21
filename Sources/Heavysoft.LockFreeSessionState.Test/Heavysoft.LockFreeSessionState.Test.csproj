@@ -36,7 +36,7 @@
     <SignAssembly>true</SignAssembly>
   </PropertyGroup>
   <PropertyGroup>
-    <AssemblyOriginatorKeyFile>LockFreeSessionState0.pfx</AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile>..\Heavysoft.LockFreeSessionState.Common\LockFreeSessionState0.pfx</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -77,7 +77,9 @@
     <Compile Include="StandardGeneralTest.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="LockFreeSessionState0.pfx" />
+    <None Include="..\Heavysoft.LockFreeSessionState.Common\LockFreeSessionState0.pfx">
+      <Link>LockFreeSessionState0.pfx</Link>
+    </None>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>

@@ -29,13 +29,13 @@ namespace Heavysoft.Web.SessionState
         {
             try
             {
-                dataLock.EnterReadLock();
+                dataLock.EnterWriteLock();
                 dataKeys.Clear();
                 dataValues.Clear();
             }
             finally
             {
-                dataLock.ExitReadLock();
+                dataLock.ExitWriteLock();
             }
         }
 
