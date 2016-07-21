@@ -8,6 +8,7 @@ Initialize-BuildVariables
 Invoke-NugetRestore $solution
 
 $env:HVChangeset = (git 'rev-parse' 'HEAD').SubString(0, 7)
+$env:HVPatch = 1
 
 Invoke-SolutionBuild $solution 'Release' 'Clean'
 Invoke-SolutionBuild $solution 'Release' 'Build'
