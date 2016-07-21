@@ -30,7 +30,6 @@ namespace Heavysoft.Web.SessionState
 
         private bool initialized;
         private ISessionIDManager sessionIdManager;
-        private SessionStateSection config;
         private static readonly object LockObject = new object();
 
         /// <summary>
@@ -59,7 +58,7 @@ namespace Heavysoft.Web.SessionState
                         // Get the configuration section and set timeout and CookieMode values.
                         Configuration cfg =
                           WebConfigurationManager.OpenWebConfiguration(System.Web.Hosting.HostingEnvironment.ApplicationVirtualPath);
-                        config = (SessionStateSection)cfg.GetSection("system.web/sessionState");
+                        SessionStateSection config = (SessionStateSection)cfg.GetSection("system.web/sessionState");
 
                         Timeout = (int)config.Timeout.TotalMinutes;
                         CookieMode = config.Cookieless;
