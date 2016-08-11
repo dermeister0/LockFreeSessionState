@@ -32,6 +32,10 @@ namespace Heavysoft.Web.SessionState
         private ISessionIDManager sessionIdManager;
         private static readonly object LockObject = new object();
 
+        // Per-request fields:
+        private bool acquireCalled;
+        private bool releaseCalled;
+
         /// <summary>
         /// IHttpModule.Init  
         /// </summary>
@@ -41,6 +45,7 @@ namespace Heavysoft.Web.SessionState
             // Add event handlers.
             app.AcquireRequestState += OnAcquireRequestState;
             app.ReleaseRequestState += OnReleaseRequestState;
+            app.EndRequest += OnEndRequest;
 
             // Create a SessionIDManager.
             sessionIdManager = new SessionIDManager();
@@ -72,7 +77,7 @@ namespace Heavysoft.Web.SessionState
         /// <summary>
         /// IHttpModule.Dispose 
         /// </summary>
-         public void Dispose()
+        public void Dispose()
         {
             Dispose(true);
             GC.SuppressFinalize(this);
@@ -89,6 +94,8 @@ namespace Heavysoft.Web.SessionState
         /// <param name="args"></param>
         private void OnAcquireRequestState(object source, EventArgs args)
         {
+            acquireCalled = true;
+
             HttpApplication app = (HttpApplication)source;
             HttpContext context = app.Context;
             bool isNew = false;
@@ -155,6 +162,8 @@ namespace Heavysoft.Web.SessionState
         /// <param name="args"></param>
         private void OnReleaseRequestState(object source, EventArgs args)
         {
+            releaseCalled = true;
+
             HttpApplication app = (HttpApplication)source;
             HttpContext context = app.Context;
 
@@ -172,6 +181,23 @@ namespace Heavysoft.Web.SessionState
             }
 
             SessionStateUtility.RemoveHttpSessionStateFromContext(context);
+        }
+
+        private void OnEndRequest(object source, EventArgs eventArgs)
+        {
+            try
+            {
+                // Thread is aborted - need to release session state anyway.
+                if (!releaseCalled && acquireCalled)
+                {
+                    OnReleaseRequestState(source, eventArgs);
+                }
+            }
+            finally
+            {
+                acquireCalled = false;
+                releaseCalled = false;
+            }
         }
 
         protected virtual void OnInit()
