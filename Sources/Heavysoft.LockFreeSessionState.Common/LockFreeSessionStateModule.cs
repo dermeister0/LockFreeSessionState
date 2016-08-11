@@ -72,7 +72,7 @@ namespace Heavysoft.Web.SessionState
         /// <summary>
         /// IHttpModule.Dispose 
         /// </summary>
-         public void Dispose()
+        public void Dispose()
         {
             Dispose(true);
             GC.SuppressFinalize(this);

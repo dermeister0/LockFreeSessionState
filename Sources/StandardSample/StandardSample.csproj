@@ -65,6 +65,8 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="AbandonResult.aspx" />
+    <Content Include="AbandonTest.aspx" />
     <Content Include="Default.aspx" />
     <Content Include="Fast.aspx" />
     <Content Include="Slow.aspx" />
